@@ -23,11 +23,12 @@ https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
  - Reboot the vm
  - Copy pimpmyadlab.ps1 to the vm
   
-  Each run will reuire : 
-  start / run / cmd (as administrator)
-  powershell -ep bypass 
-  cd \to\where\you\saved\the\script
-  .\pimpmy-tcmpeh-adlab.ps1
+Each run will require :
+- start / run / cmd (as administrator)
+- powershell -ep bypass 
+- cd \to\where\you\saved\the\script
+- .\pimpmyadlab.ps1
+- You will be presented with a menu
 
  Lab build is 3 vms :
  1. Hydra-DC  (Windows 2019 Server) 
