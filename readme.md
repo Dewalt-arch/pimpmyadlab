@@ -1,4 +1,5 @@
-# pimpmyadlab.ps1 (name and repo may change its still under debate)
+# PimpmyADLab.ps1 
+  note: name and repo may change it is still under debate 
 
 TCM-ACADEMY Practical Ethical Hacker Course - Active Directory Lab build script
  - DomainController (Hydra-DC) and both Workstations
@@ -11,8 +12,8 @@ https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 # Note: 
   This script is being provided as a curtosy and is by no means intended to replace 
  or remove direct course provided instruction. All aspects of this script have been 
- carefully planned out to replicate the lab instructed setup per peh course material
- and provide a scripted installation, with a number of fixes to common issues. 
+ carefully planned out to replicate the lab instructed setup per PEH course material
+ and provide a scripted installation.
  
 # INSTALLATION AND USAGE : 
  
