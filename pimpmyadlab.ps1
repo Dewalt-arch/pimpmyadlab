@@ -10,44 +10,6 @@
 #  Yaseen (PNPT Certified) for Alpha/Beta Testing!
 #  uCald4aMarine Release Candidate Testing
 # 
-# Note: Script is being provided as a curtosy and is by no means intended to replace 
-# or remove direct course provided instruction. All aspects of this script have been 
-# carefully planned out to replicate the lab instructed setup per peh course material
-# and provide a scripted installation, with a number of fixes to common issues. 
-# 
-# INSTALLATION AND USAGE : 
-# 
-# On each machine Domain Contoller, Workstation1 and Workstation2 : 
-#  start / run / cmd (as administrator)
-#  powershell -ep bypass 
-#  cd \to\where\you\saved\the\script
-#  .\pimpmy-tcmpeh-adlab.ps1
-#
-# Lab build is 3 vms :
-# 1. Hydra-DC  (Windows 2019 Server) 
-# 2. Punisher  (Windows 10 Enterprise Client)
-# 3. Spiderman (Windows 10 Enterprise Client)
-#
-# Menu Option D - Domain Controller only (Windows 2019 Server)
-# Script must be run 3 times in order to fully complete Domain Contoller Install/Configure
-# Run 1 - Sets the name of the computer to Hydra-DC, reboots automatically when done
-# Run 2 - Installs Domain Controller, Forest, etc, reboots automatically when done
-# Run 3 - Installs the contents for the Cert-Auth, Domain, Users, SetSPN, etc and various other things
-#
-# Menu Option P - Punisher Workstation only (Windows 10 Enterprise Client Workstation)
-# Script must be run 2 times in order to fully complete Punisher Workstation Install/Configure
-# HYDRA-DC Domain Controller must already be completed and running to setup this workstation
-# Run 1 - Sets the name of the computer to Punisher, reboots 
-# Run 2 - Set the ip address of the domain controller for workstation dns, join domain Marvel.local, reboots
-#
-# Menu Option S - Spiderman Workstation only (Windows 10 Enterprise Client Workstation)
-# Script must be run 2 times in order to fully complete Domain Contoller Install/Configure
-# HYDRA-DC Domain Controller must already be completed and running to setup this workstation
-# Run 1 - Sets the name of the computer to Spiderman, reboots
-# Run 2 - Set the ip address of the domain controller for workstation dns, join domain Marvel.local, reboots
-#
-# Menu Option X - Exits the menu 
-#
 
 # ---- BEGIN NUKE DEFENDER FUNCTION
 function nukedefender {
@@ -184,10 +146,10 @@ function create_labcontent {
   write-host("`n  [++] Setting DNS Server to 127.0.0.1 on interface $adapter")
   Set-DNSClientServerAddress "$adapter" -ServerAddresses ("127.0.0.1") | Out-Null
 
-  # NEED TO DO:
-  # ADMINISTRATOR : PASSWORD IS P@$$w0rd! PER COURSE INSTRUCTION... CHANGE IT?
+  # DEBATING :
+  # ADMINISTRATOR PASSWORD IS P@$$w0rd! PER COURSE INSTRUCTION... CHANGE IT?
   # MAY CREATE TOO MUCH CONFUSION AS THE USER IS GOING TO INSTALL THE OS AND SET THE
-  # PASSWORD FOR ADMINISTRATOR HOLD ON THIS IDEA
+  # PASSWORD FOR ADMINISTRATOR
 
   # CREATE USER PETER PARKER (PPARKER) AND ASSIGN GROUPS
   New-ADUser -Name "Peter Parker" -GivenName "Peter" -Surname "Parker" -SamAccountName "pparker" `
