@@ -32,7 +32,7 @@ Requirements :
  - Reboot the vm
  - Copy pimpmyadlab.ps1 to the vm
   
-Each run will require :
+Each run will require the following :
 - start / run / cmd (as administrator)
 - powershell -ep bypass 
 - cd \to\where\you\saved\the\script
@@ -46,7 +46,7 @@ Each run will require :
 
 Menu Option D 
 - Domain Controller only (Windows 2019 Server)
-- Script must be run 3 times in order to fully complete Domain Contoller Install/Configure
+- Script must be run 3 times in order to fully complete Domain Contoller installation and configuration
   - Run 1 - Sets the name of the computer to Hydra-DC, reboots automatically when done
   - Run 2 - Installs Domain Controller, Forest, etc, reboots automatically when done
   - Run 3 - Installs the contents for the Cert-Auth, Domain, Users, SetSPN, etc and various other things
