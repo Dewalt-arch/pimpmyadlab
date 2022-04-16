@@ -1,5 +1,5 @@
 ﻿#Requires -RunAsAdministrator
-
+ 
 # TCM-ACADEMY Practical Ethical Hacker Course - Active Directory Lab build script 
 # DomainController (Hydra-DC) and Both Workstation (Punisher & Spiderman)
 # https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
