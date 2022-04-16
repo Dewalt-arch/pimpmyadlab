@@ -2,9 +2,9 @@
   note: name and repo may change it is still under debate 
 
 TCM-ACADEMY Practical Ethical Hacker Course - Active Directory Lab build script
- - DomainController (Hydra-DC) and both Workstations
-   - Windows 2019 Server (Standard Evaluation - Desktop Experience) required
-   - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
+ - DomainController (Hydra-DC) and Both Workstations
+ - Windows 2019 Server (Standard Evaluation - Desktop Experience) required
+ - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
 
 Course Link : 
 https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
@@ -14,6 +14,8 @@ https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
  or remove direct course provided instruction. All aspects of this script have been 
  carefully planned out to replicate the lab instructed setup per PEH course material
  and provide a scripted installation.
+
+ Disclaimer: Author assumes no liability
  
 # Special Thanks to :
   - ToddAtLarge (PNPT Certified) for the NukeDefender script 
@@ -62,3 +64,4 @@ Menu Option S
   - Run 2 - Set the ip address of the domain controller for workstation dns, join domain Marvel.local, reboots
 
  Menu Option X  Exits the menu 
+ 
