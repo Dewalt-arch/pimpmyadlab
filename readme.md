@@ -2,9 +2,11 @@
   note: name and repo may change it is still under debate 
 
 TCM-ACADEMY Practical Ethical Hacker Course - Active Directory Lab build script
- - DomainController (Hydra-DC) and Both Workstations
- - Windows 2019 Server (Standard Evaluation - Desktop Experience) required
- - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
+ - DomainController (Hydra-DC)
+   - Windows 2019 Server (Standard Evaluation - Desktop Experience) required
+ 
+ - Workstations
+   - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
 
 Course Link : 
 https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
