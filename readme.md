@@ -12,7 +12,7 @@ Requirements :
     - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
 
 # Note: 
- This script is being provided as a curtosy and is by no means intended to replace 
+ This script is being provided as a courtesy and is by no means intended to replace 
  or remove any direct course provided instruction. All aspects of this script have 
  been carefully planned, to replicate the lab instructed setup per PEH course material
  and provide a scripted installation.
