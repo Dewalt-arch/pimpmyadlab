@@ -18,8 +18,10 @@ https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 # INSTALLATION AND USAGE : 
  
  On each machine Domain Contoller, Workstation1 and Workstation2 : 
- Install the Operating System, Insall the Hypervisor GuestOS-Additions/Tools, reboot
- Copy the script to the vm
+ - Install the Operating System
+ - Install the Hypervisor GuestOS-Additions/Tools
+ - Reboot the vm
+ - Copy pimpmyadlab.ps1 to the vm
   
   Each run will reuire : 
   start / run / cmd (as administrator)
