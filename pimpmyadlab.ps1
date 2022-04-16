@@ -153,7 +153,7 @@ function create_labcontent {
   # CREATE USER PETER PARKER (PPARKER) AND ASSIGN GROUPS
   New-ADUser -Name "Peter Parker" -GivenName "Peter" -Surname "Parker" -SamAccountName "pparker" `
   -UserPrincipalName "pparker@$Global:Domain -Path DC=marvel,DC=local" `
-  -AccountPassword (ConvertTo-SecureString Password2 -AsPlainText -Force) `
+  -AccountPassword (ConvertTo-SecureString "Password2" -AsPlainText -Force) `
   -PasswordNeverExpires $true -PassThru | Enable-ADAccount  | Out-Null
   Write-Host "`n  [++] User: Peter Parker added, Logon: pparker Password: Password2"
   Write-Host "        Adding Peter Parker to Marvel.local Groups: Domain Users"
@@ -161,7 +161,7 @@ function create_labcontent {
   # CREATE USER FRANK CASTLE (FCASTLE) AND ASSIGN GROUPS
   New-ADUser -Name "Frank Castle" -GivenName "Frank" -Surname "Castle" -SamAccountName "fcastle" `
   -UserPrincipalName "fcastle@$Global:Domain -Path DC=marvel,DC=local" `
-  -AccountPassword (ConvertTo-SecureString Password1 -AsPlainText -Force) `
+  -AccountPassword (ConvertTo-SecureString "Password1" -AsPlainText -Force) `
   -PasswordNeverExpires $true -PassThru | Enable-ADAccount  | Out-Null
 
   # IF THE RPC_S_ACCESS_DENIED IS FIXED BY THE REG KEY FCASTLE NO LONGER NEEDS TO BE A DOMAIN ADMIN
@@ -172,7 +172,7 @@ function create_labcontent {
   # CREATE USER TONY STARK
   New-ADUser -Name "`n  [++] User: Tony Stark" -GivenName "Tony" -Surname "Stark" -SamAccountName "tstark" `
   -UserPrincipalName "tstark@$Global:Domain -Path DC=marvel,DC=local" `
-  -AccountPassword (ConvertTo-SecureString Password2019!@# -AsPlainText -Force) `
+  -AccountPassword (ConvertTo-SecureString "Password2019!@#" -AsPlainText -Force) `
   -PasswordNeverExpires $true -PassThru | Enable-ADAccount | Out-Null
 
   Add-ADGroupMember -Identity "Administrators" -Members tstark
@@ -183,7 +183,7 @@ function create_labcontent {
   # CREATE USER SQL SERVICE (SQLSERVICE) AND ASSIGN GROUPS (SQLSERVICE)
   New-ADUser -Name "SQL Service" -GivenName "SQL" -Surname "Service" -SamAccountName "sqlservice" `
   -UserPrincipalName "sqlservice@$Global:Domain -Path DC=marvel,DC=local" `
-  -AccountPassword (ConvertTo-SecureString MYpassword123$ -AsPlainText -Force) `
+  -AccountPassword (ConvertTo-SecureString "MYpassword123#" -AsPlainText -Force) `
   -PasswordNeverExpires $true -Description "Password is MYpassword123#" -PassThru | Enable-ADAccount | Out-Null
 
   Add-ADGroupMember -Identity "Administrators" -Members sqlservice | Out-Null
