@@ -13,8 +13,8 @@ Requirements :
 
 # Note: 
   This script is being provided as a curtosy and is by no means intended to replace 
- or remove direct course provided instruction. All aspects of this script have been 
- carefully planned out to replicate the lab instructed setup per PEH course material
+ or remove any direct course provided instruction. All aspects of this script have 
+ been carefully planned, to replicate the lab instructed setup per PEH course material
  and provide a scripted installation.
 
  Disclaimer: Author assumes no liability
