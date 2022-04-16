@@ -46,7 +46,7 @@
 # Run 1 - Sets the name of the computer to Spiderman, reboots
 # Run 2 - Set the ip address of the domain controller for workstation dns, join domain Marvel.local, reboots
 #
-# Menu Option X  Exists the menu 
+# Menu Option X - Exits the menu 
 #
 
 # ---- BEGIN NUKE DEFENDER FUNCTION
