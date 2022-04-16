@@ -2,7 +2,7 @@
   note: name and repo may change it is still under debate 
 
 TCM-ACADEMY Practical Ethical Hacker Course - Active Directory Lab build script
-Course Link : https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
+- Course Link : https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 
 Requirements : 
  - DomainController (Hydra-DC)
