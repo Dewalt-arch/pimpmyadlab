@@ -1,15 +1,15 @@
 # PimpmyADLab.ps1 
   note: name and repo may change it is still under debate 
 
-TCM-ACADEMY Practical Ethical Hacker Course - Active Directory Lab build script
+TCM-Academy Practical Ethical Hacker Course - Active Directory Lab build script
 - Course Link : https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 
 Requirements : 
  - DomainController (Hydra-DC)
-   - Windows 2019 Server (Standard Evaluation - Desktop Experience) required
+ - Windows 2019 Server (Standard Evaluation - Desktop Experience) required
  
  - Workstations
-   - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
+ - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
 
 # Note: 
   This script is being provided as a curtosy and is by no means intended to replace 
