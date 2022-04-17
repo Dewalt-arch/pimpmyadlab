@@ -44,9 +44,9 @@ Each run will require the following :
  3. Spiderman (Windows 10 Enterprise Client)
 
  # Menu 
-  - D  to install for Domain Controler, runs 1 2 and 3 
-  - P  to install for Workstation #1 Punisher runs 1 and 2 
-  - S  to install for Workstation #2 Spiderman runs 1 and 2 
+  - D  to install for Hydra-DC  Domain Controller , run 1 2 and 3 
+  - P  to install for Punisher  Workstation #1 run 1 and 2 
+  - S  to install for Spiderman Workstation #2 run 1 and 2 
   - X  to exit the menu 
 
 # Domain Controller Instructions: 
