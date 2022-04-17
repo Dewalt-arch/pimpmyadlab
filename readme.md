@@ -110,7 +110,7 @@ Each run will require the following :
     - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
     - Try again with correct logon credentials
 
-# Workstation #2 Instructions: 
+# Workstation #2 Instructions:
 
 - Spiderman Workstation only (Windows 10 Enterprise Client Workstation)
   - Install the OS in the vm 
