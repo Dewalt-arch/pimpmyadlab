@@ -101,14 +101,14 @@ Each run will require the following :
     - Enter the Administrator username and password for the HYDRA-DC Login when prompted to join domain Marvel.local
     - Reboots automatically
      
-     - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
-       - Setup is complete! 
+    - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
+    - Setup is complete! 
      
-     - If the machine did not reboot automatically :
-       - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
-       - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
-       - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
-       - Try again with correct logon credentials
+    - If the machine did not reboot automatically :
+      - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
+      - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
+      - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
+      - Try again with correct logon credentials
 
 # Workstation #2 Instructions: 
 
@@ -137,14 +137,14 @@ Each run will require the following :
     - Enter the Adminstrator username and password to join domain Marvel.local when prompted
     - Reboots automatically
       
-      - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
-        - Setup is complete! 
+    - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
+    - Setup is complete! 
       
-      - If the machine did not reboot automatically :
-        - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
-        - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
-        - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
-        - Try again with correct logon credentials 
+    - If the machine did not reboot automatically :
+      - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
+      - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
+      - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
+      - Try again with correct logon credentials 
 
  Menu Option X  
  - Exits the menu 
