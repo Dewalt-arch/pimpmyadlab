@@ -45,6 +45,9 @@ Each run will require the following :
 
 Menu Option D 
 - Domain Controller only (Windows 2019 Server)
+  - Install the OS in the vm 
+  - Install the Hypervisor GuestOS Additions/Tools, Reboot
+  - Copy script to the vm (see instructions above on how to run the script in the vm)
 - Script must be run 3 times in order to fully complete Domain Contoller installation and configuration
   - Run 1 - Sets the name of the computer to Hydra-DC, reboots automatically when done
   - Run 2 - Installs Domain Controller, Forest, etc, reboots automatically when done
@@ -52,6 +55,9 @@ Menu Option D
 
 Menu Option P 
 - Punisher Workstation only (Windows 10 Enterprise Client Workstation)
+  - Install the OS in the vm 
+  - Install the Hypervisor GuestOS Additions/Tools, Reboot
+  - Copy script to the vm (see instructions above on how to run the script in the vm)
 - Script must be run 2 times in order to fully complete Punisher Workstation Install/Configure
   - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
   - Run 1 - Sets the name of the computer to Punisher, reboots 
@@ -59,6 +65,9 @@ Menu Option P
 
 Menu Option S 
 - Spiderman Workstation only (Windows 10 Enterprise Client Workstation)
+  - Install the OS in the vm 
+  - Install the Hypervisor GuestOS Additions/Tools, Reboot
+  - Copy script to the vm (see instructions above on how to run the script in the vm)
 - Script must be run 2 times in order to fully complete Domain Contoller Install/Configure
   - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
   - Run 1 - Sets the name of the computer to Spiderman, reboots
