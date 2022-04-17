@@ -67,10 +67,10 @@ Each run will require the following :
    - Script must be run 3 times in order to fully complete Domain Contoller installation and configuration
    
    - Run 1 - Sets the name of the computer to Hydra-DC, reboots automatically when done
-     - After the reboot, Run script again, Select Menu Option D again for Run #2 
+     - After the reboot, Run script again, Select Menu Option D for Run #2 
    
    - Run 2 - Installs Domain Controller, Forest, etc, reboots automatically when done
-     - After the reboot, Run script again, Select Menu Option D again for Run #3 
+     - After the reboot, Run script again, Select Menu Option D for Run #3 
    
    - Run 3 - Installs the contents for the Cert-Auth, Domain, Users, SetSPN, etc and various other things
      - Final reboot of the system, domin controller is complete and ready for use! 
@@ -94,7 +94,7 @@ Each run will require the following :
     - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
  
   - Run 1 - Sets the name of the computer to Punisher, reboots 
-    - After the reboot, Run script again, Select Menu Option P again for Run #2 
+    - After the reboot, Run script again, Select Menu Option P for Run #2 
  
   - Run 2 
     - Enter the ip address of the domain controller when prompted
@@ -130,7 +130,7 @@ Each run will require the following :
   
   - Run 1 
     - Sets the name of the computer to Spiderman, reboots
-    - After the reboot, Run script again, Select Menu Option S again for Run #2 
+    - After the reboot, Run script again, Select Menu Option S for Run #2 
   
   - Run 2 
     - Enter the ip address of the domain controller when prompted
