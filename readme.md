@@ -98,7 +98,7 @@ Each run will require the following :
  
   - Run 2 
     - Enter the ip address of the domain controller when prompted
-    - Enter the Administrator username and password for the HYDRA-DC Login when prompted to join domain Marvel.local
+    - Enter the Hydra-DC Administrator username and password when prompted to join domain Marvel when prompted
     - Reboots automatically
      
     - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
@@ -134,7 +134,7 @@ Each run will require the following :
   
   - Run 2 
     - Enter the ip address of the domain controller when prompted
-    - Enter the Adminstrator username and password to join domain Marvel.local when prompted
+    - Enter the Hydra-DC Adminstrator username and password to join the domain Marvel when prompted
     - Reboots automatically
       
     - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
