@@ -54,7 +54,7 @@ Each run will require the following :
 - Domain Controller only (Windows 2019 Server)
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
-  - Copy script to the vm (see instructions above on how to run the script in the vm)
+  - Copy script to the vm
   
   - Execute the instructions below in the vm 
     - start / run / cmd (as administrator)
@@ -80,7 +80,7 @@ Each run will require the following :
 - Punisher Workstation only (Windows 10 Enterprise Client Workstation)
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
-  - Copy script to the vm (see instructions above on how to run the script in the vm)
+  - Copy script to the vm
   
   - Execute the instructions below in the vm 
     - start / run / cmd (as administrator)
@@ -115,7 +115,7 @@ Each run will require the following :
 - Spiderman Workstation only (Windows 10 Enterprise Client Workstation)
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
-  - Copy script to the vm (see instructions above on how to run the script in the vm)
+  - Copy script to the vm
   
   - Execute the instructions below in the vm 
     - start / run / cmd (as administrator)
