@@ -56,11 +56,11 @@ Each run will require the following :
    - Select Menu Option D 
    - Script must be run 3 times in order to fully complete Domain Contoller installation and configuration
     - Run 1 - Sets the name of the computer to Hydra-DC, reboots automatically when done
-     - After the reboot, Run script again, Select Menu Option D again for Run #2 
+      - After the reboot, Run script again, Select Menu Option D again for Run #2 
     - Run 2 - Installs Domain Controller, Forest, etc, reboots automatically when done
-     - After the reboot, Run script again, Select Menu Option D again for Run #2 
+      - After the reboot, Run script again, Select Menu Option D again for Run #2 
     - Run 3 - Installs the contents for the Cert-Auth, Domain, Users, SetSPN, etc and various other things
-     - Final reboot of the system, domin controller is done and ready for use! 
+      - Final reboot of the system, domin controller is done and ready for use! 
 
 - Punisher Workstation only (Windows 10 Enterprise Client Workstation)
   - Install the OS in the vm 
