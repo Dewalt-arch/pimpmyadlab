@@ -73,7 +73,7 @@ Each run will require the following :
       - After the reboot, Run script again, Select Menu Option D again for Run #3 
    
     - Run 3 - Installs the contents for the Cert-Auth, Domain, Users, SetSPN, etc and various other things
-      - Final reboot of the system, domin controller is done and ready for use! 
+      - Final reboot of the system, domin controller is complete and ready for use! 
 
 # Workstation #1 Instructions: 
 
@@ -96,9 +96,20 @@ Each run will require the following :
   - Run 1 - Sets the name of the computer to Punisher, reboots 
     - After the reboot, Run script again, Select Menu Option P again for Run #2 
  
-  - Run 2 - Enter the ip address of the domain controller when prompted, join domain Marvel.local, reboots
-    - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
-      
+  - Run 2 
+    - Enter the ip address of the domain controller when prompted
+    - Enter the Administrator username and password for the HYDRA-DC Login when prompted to join domain Marvel.local
+    - Reboots automatically
+     
+     - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
+       - Setup is complete! 
+     
+     - If the machine did not reboot automatically :
+       - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
+       - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
+       - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
+       - Try again with correct logon credentials
+
 # Workstation #2 Instructions: 
 
 - Spiderman Workstation only (Windows 10 Enterprise Client Workstation)
@@ -117,11 +128,23 @@ Each run will require the following :
     - Script must be run 2 times to fully complete Workstation installation and configuation
     - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
   
-  - Run 1 - Sets the name of the computer to Spiderman, reboots
+  - Run 1 
+    - Sets the name of the computer to Spiderman, reboots
     - After the reboot, Run script again, Select Menu Option S again for Run #2 
   
-  - Run 2 - Enter the ip address of the domain controller when prompted, join domain Marvel.local, reboots
-    - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
+  - Run 2 
+    - Enter the ip address of the domain controller when prompted
+    - Enter the Adminstrator username and password to join domain Marvel.local when prompted
+    - Reboots automatically
+      
+      - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
+        - Setup is complete! 
+      
+      - If the machine did not reboot automatically :
+        - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
+        - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
+        - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
+        - Try again with correct logon credentials 
 
  Menu Option X  
  - Exits the menu 
