@@ -12,12 +12,12 @@ Requirements :
     - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
 
 # Note: 
- This script is being provided as a courtesy and is by no means intended to replace 
- or remove any direct course provided instruction. All aspects of this script have 
- been carefully planned, to replicate the lab instructed setup per PEH course material
- and provide a scripted installation.  
-
- Disclaimer: Author assumes no liability
+ This script is being provided as a courtesy in addition to, and is by no means an intent
+ or intended to replace or remove any direct course provided instruction. All aspects of 
+ this script have been carefully planned, to replicate the lab instructed setup per 
+ TCM Academy/PEH course material and provide a scripted installation.  
+ 
+ Disclaimer: Author assumes zero liability for any damages in any form. 
  
 # Special Thanks to :
   - ToddAtLarge (PNPT Certified) for the NukeDefender script 
