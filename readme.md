@@ -11,7 +11,7 @@ Requirements :
 - Workstations
     - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
 
-# Note: 
+# Note:
  This script is provided as a courtesy in addition to, and is by no means intended 
  to replace or remove any direct course provided instruction. All aspects of this 
  script have been carefully planned, to replicate the lab instructed setup per 
