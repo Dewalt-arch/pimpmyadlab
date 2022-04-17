@@ -66,14 +66,14 @@ Each run will require the following :
    - Select Menu Option D 
    - Script must be run 3 times in order to fully complete Domain Contoller installation and configuration
    
-    - Run 1 - Sets the name of the computer to Hydra-DC, reboots automatically when done
-      - After the reboot, Run script again, Select Menu Option D again for Run #2 
+   - Run 1 - Sets the name of the computer to Hydra-DC, reboots automatically when done
+     - After the reboot, Run script again, Select Menu Option D again for Run #2 
    
-    - Run 2 - Installs Domain Controller, Forest, etc, reboots automatically when done
-      - After the reboot, Run script again, Select Menu Option D again for Run #3 
+   - Run 2 - Installs Domain Controller, Forest, etc, reboots automatically when done
+     - After the reboot, Run script again, Select Menu Option D again for Run #3 
    
-    - Run 3 - Installs the contents for the Cert-Auth, Domain, Users, SetSPN, etc and various other things
-      - Final reboot of the system, domin controller is complete and ready for use! 
+   - Run 3 - Installs the contents for the Cert-Auth, Domain, Users, SetSPN, etc and various other things
+     - Final reboot of the system, domin controller is complete and ready for use! 
 
 # Workstation #1 Instructions: 
 
@@ -101,14 +101,14 @@ Each run will require the following :
     - Enter the Hydra-DC Administrator username and password when prompted to join domain Marvel when prompted
     - Reboots automatically
      
-    - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
+  - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
     - Setup is complete! 
      
-    - If the machine did not reboot automatically :
-      - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
-      - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
-      - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
-      - Try again with correct logon credentials
+  - If the machine did not reboot automatically :
+    - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
+    - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
+    - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
+    - Try again with correct logon credentials
 
 # Workstation #2 Instructions: 
 
@@ -137,14 +137,14 @@ Each run will require the following :
     - Enter the Hydra-DC Adminstrator username and password to join the domain Marvel when prompted
     - Reboots automatically
       
-    - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
+  - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
     - Setup is complete! 
       
-    - If the machine did not reboot automatically :
-      - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
-      - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
-      - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
-      - Try again with correct logon credentials 
+  - If the machine did not reboot automatically :
+    - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
+    - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
+    - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
+    - Try again with correct logon credentials 
 
  Menu Option X  
  - Exits the menu 
