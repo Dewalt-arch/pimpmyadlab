@@ -43,6 +43,13 @@ Each run will require the following :
  2. Punisher  (Windows 10 Enterprise Client)
  3. Spiderman (Windows 10 Enterprise Client)
 
+ # Menu 
+  D  to install for Domain Controler, runs 1 2 and 3 
+  P  to install for Workstation #1 Punisher runs 1 and 2 
+  S  to install for Workstation #2 Spiderman runs 1 and 2 
+  X  to exit the menu 
+
+# Domain Controller Instructions: 
 
 - Domain Controller only (Windows 2019 Server)
   - Install the OS in the vm 
@@ -62,6 +69,8 @@ Each run will require the following :
     - Run 3 - Installs the contents for the Cert-Auth, Domain, Users, SetSPN, etc and various other things
       - Final reboot of the system, domin controller is done and ready for use! 
 
+# Workstation #1 Instructions: 
+
 - Punisher Workstation only (Windows 10 Enterprise Client Workstation)
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
@@ -79,6 +88,8 @@ Each run will require the following :
   - Run 2 - Enter the ip address of the domain controller when prompted, join domain Marvel.local, reboots
     - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
       
+# Workstation #2 Instructions: 
+
 - Spiderman Workstation only (Windows 10 Enterprise Client Workstation)
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
