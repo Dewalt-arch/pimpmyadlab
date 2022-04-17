@@ -146,5 +146,3 @@ Each run will require the following :
     - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
     - Try again with correct logon credentials 
 
- Menu Option X  
- - Exits the menu 
