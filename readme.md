@@ -1,5 +1,5 @@
 # PimpmyADLab.ps1 
-  note: name and repo may change it is still under debate 
+  (note: name and repo may change it is still under debate)
 
 TCM-Academy Practical Ethical Hacker Course - Active Directory Lab build script
 - Course Link : https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
