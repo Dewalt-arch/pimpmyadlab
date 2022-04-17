@@ -55,6 +55,7 @@ Each run will require the following :
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm (see instructions above on how to run the script in the vm)
+    - Execute the instructions below in the vm 
     - start / run / cmd (as administrator)
     - powershell -ep bypass
     - cd \to\where\you\saved\the\script
@@ -75,6 +76,7 @@ Each run will require the following :
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm (see instructions above on how to run the script in the vm)
+    - Execute the instructions below in the vm 
     - start / run / cmd (as administrator)
     - powershell -ep bypass
     - cd \to\where\you\saved\the\script
@@ -94,6 +96,7 @@ Each run will require the following :
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm (see instructions above on how to run the script in the vm)
+    - Execute the instructions below in the vm 
     - start / run / cmd (as administrator)
     - powershell -ep bypass
     - cd \to\where\you\saved\the\script
