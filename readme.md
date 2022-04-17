@@ -101,7 +101,7 @@ Each run will require the following :
     - Enter the Hydra-DC Administrator username and password when prompted to join domain Marvel when prompted
     - Reboots automatically
      
-  - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
+  - If the workstation vm rebooted automatically
     - Setup is complete! 
      
   - If the machine did not reboot automatically :
@@ -137,7 +137,7 @@ Each run will require the following :
     - Enter the Hydra-DC Adminstrator username and password to join the domain Marvel when prompted
     - Reboots automatically
       
-  - If the machine rebooted after being prompted for the Administrator Username and Password to join the domain 
+  - If the workstation vm rebooted automatically 
     - Setup is complete! 
       
   - If the machine did not reboot automatically :
