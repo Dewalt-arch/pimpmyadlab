@@ -90,7 +90,7 @@ Each run will require the following :
     - You will be presented with a menu
   
   - Select Menu Option P 
-    - Script must be run 2 times to fully complete Punisher Workstation Install/Configure
+    - Script must be run 2 times to fully complete Workstation installation and configuation
     - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
  
   - Run 1 - Sets the name of the computer to Punisher, reboots 
@@ -114,7 +114,7 @@ Each run will require the following :
     - You will be presented with a menu
   
   - Select Menu Option S
-    - Script must be run 2 times to fully complete Domain Contoller Install/Configure
+    - Script must be run 2 times to fully complete Workstation installation and configuation
     - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
   
   - Run 1 - Sets the name of the computer to Spiderman, reboots
