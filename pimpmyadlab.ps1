@@ -347,19 +347,22 @@ function server_build {
     Write-host "`t(must be run 2 times)`n"
     Write-Host "`tPress 'S' to setup Spiderman Workstation and join the domain Marvel.local" 
     Write-host "`t(must be run 2 times)`n"
+    Write-host "`tPress 'N' to only run the NukeDefender Function`n"
     Write-Host "`tPress 'X' to Exit"
-    $choice = Read-Host "`n`tEnter Choice" } until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'X'))
+    $choice = Read-Host "`n`tEnter Choice" } until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'X'))
 
     switch ($choice) {
-      'D'{  Write-Host "`nYou have selected Hydra-DC domain controller"
+      'D'{  Write-Host "`n You have selected Hydra-DC domain controller"
             nukedefender 
             server_build }
-      'P'{  Write-Host "`nYou have selected Punisher Workstation"
+      'P'{  Write-Host "`n You have selected Punisher Workstation"
             nukedefender 
             workstation_punisher }
-      'S'{  Write-Host "`nYou have selected Spiderman Workstation"
+      'S'{  Write-Host "`n You have selected Spiderman Workstation"
             nukedefender 
             workstation_spiderman }
+      'N'{  Write-Host "`n You have selected to only run the NukeDefender function"
+            nukedefender }
       'X'{Return}
     }
     # ---- END MAIN 
