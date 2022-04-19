@@ -12,12 +12,17 @@ Requirements :
     - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
 
 # Note:
+ Disclaimer: Author assumes zero liability for any damages in any form. 
+
  This script is provided as a courtesy in addition to, and is by no means intended 
  to replace or remove any direct course provided instruction. All aspects of this 
  script have been carefully planned, to replicate the lab instructed setup per 
  TCM Academy/PEH course material and provide a scripted installation.  
  
- Disclaimer: Author assumes zero liability for any damages in any form. 
+ The function NukeDefender.ps1 has also been provided as a seperate script
+ and menu functionality added to PimpmyADLab.ps1 for those that just need to 
+ NukeDefender only and not rebuild the entire lab. 
+
 
 # Special Thanks to :
   - ToddAtLarge (PNPT Certified) for the NukeDefender script 
