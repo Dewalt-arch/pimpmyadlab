@@ -21,7 +21,7 @@ Requirements :
  
  The function NukeDefender.ps1 has also been provided as a seperate script
  and menu functionality added to PimpmyADLab.ps1 for those that just need to 
- NukeDefender only and not rebuild the entire lab. 
+ NukeDefender only and not rebuild the entire lab.  
 
 
 # Special Thanks to :

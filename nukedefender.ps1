@@ -3,7 +3,7 @@
 # NukeDefender.ps1 
 # Function from PimpmyADLab.ps1 exported to a single script for those that 
 # dont need to rebuild the entire lab and only need the fixes provides by 
-# the nukedefender function itself. 
+# the nukedefender function itself.  
 #
 # Scripted By: Dewalt 
 #    

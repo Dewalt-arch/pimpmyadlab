@@ -339,7 +339,7 @@ function server_build {
   # ---- BEGIN MAIN
     $ErrorActionPreference = "SilentlyContinue"
     do {
-    clear
+    clear 
     Write-Host "`n`n`tTCM-Academy PEH Course AD-Lab Build Menu - Select an option`n"
     Write-Host "`tPress 'D' to setup Hydra-DC Domain Controller"
     Write-host "`t(must be run 3 times)`n"
