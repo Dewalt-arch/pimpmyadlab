@@ -74,6 +74,8 @@ function nukedefender {
 # ---- BEGIN BUILD_LAB
 function build_lab {
   $ErrorActionPreference = "SilentlyContinue"
+  # DISABLE SERVER MANAGER LAUNCH AT BOOT
+  Get-ScheduledTask -TaskName ServerManager | Disable-ScheduledTask -Verbose 
 
   # INSTALL AD-DOMAIN-SERVICES
   write-host("`n  When prompted you are being logged out simply click the Close button")

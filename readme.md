@@ -8,7 +8,7 @@ Requirements :
 - DomainController (Hydra-DC)
     - Windows 2019 Server (Standard Evaluation - Desktop Experience) required
  
-- Workstations
+- Workstations 
     - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
 
 # Note:
@@ -87,6 +87,8 @@ Each run will require the following :
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm
   
+   - (note: add section here on cloning workstaion #1 at this stage -> workstation #2)
+
   - Execute the instructions below in the vm 
     - start / run / cmd (as administrator)
     - powershell -ep bypass
@@ -97,10 +99,10 @@ Each run will require the following :
   - Select Menu Option P 
     - Script must be run 2 times to fully complete Workstation installation and configuation
     - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
- 
+    
   - Run 1 - Sets the name of the computer to Punisher, reboots 
     - After the reboot, Run script again, Select Menu Option P for Run #2 
- 
+
   - Run 2 
     - Enter the ip address of the domain controller when prompted
     - Enter the Hydra-DC Administrator username and password when prompted to join domain Marvel when prompted
@@ -115,6 +117,7 @@ Each run will require the following :
     - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
     - Try again with correct logon credentials
 
+    
 # Workstation #2 Instructions:
 
 - Spiderman Workstation only (Windows 10 Enterprise Client Workstation)
