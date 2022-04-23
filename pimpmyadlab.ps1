@@ -305,6 +305,7 @@ function server_build {
     $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
     write-host(" Setting DNS Server to $DCDNS on adapter $adapter")
     Set-DNSClientServerAddress "$adapter" -ServerAddresses ("$DCDNS")
+    write-host("`n Joining machine to domain Marvel.local Enter the Administrator username and password for the HYDRA-DC Machine")
     add-computer -domainname "MARVEL.LOCAL" -restart | Out-Null
   }
   else { write-host("Nothing to do here") }
@@ -334,6 +335,7 @@ function server_build {
       $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
       write-host(" Setting DNS Server to $DCDNS on adapter $adapter")
       Set-DNSClientServerAddress "$adapter" -ServerAddresses ("$DCDNS")
+      write-host("`n Joining machine to domain Marvel.local Enter the Administrator username and password for the HYDRA-DC Machine")
       add-computer -domainname "MARVEL.LOCAL" -restart | Out-Null
     }
     else { write-host("Nothing to do here") }
