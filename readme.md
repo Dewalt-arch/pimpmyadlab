@@ -83,6 +83,9 @@ Each run will require the following :
 # Workstation #1 Instructions: 
 
 - Punisher Workstation only (Windows 10 Enterprise Client Workstation)
+
+  - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
+
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm
@@ -98,8 +101,7 @@ Each run will require the following :
   
   - Select Menu Option P 
     - Script must be run 2 times to fully complete Workstation installation and configuation
-    - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
-    
+      
   - Run 1 - Sets the name of the computer to Punisher, reboots 
     - After the reboot, Run script again, Select Menu Option P for Run #2 
 
@@ -120,7 +122,11 @@ Each run will require the following :
     
 # Workstation #2 Instructions:
 
+
 - Spiderman Workstation only (Windows 10 Enterprise Client Workstation)
+
+  - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
+
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm
@@ -134,8 +140,7 @@ Each run will require the following :
   
   - Select Menu Option S
     - Script must be run 2 times to fully complete Workstation installation and configuation
-    - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
-  
+      
   - Run 1 
     - Sets the name of the computer to Spiderman, reboots
     - After the reboot, Run script again, Select Menu Option S for Run #2 
@@ -154,3 +159,4 @@ Each run will require the following :
     - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
     - Try again with correct logon credentials 
 
+ 

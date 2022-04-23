@@ -74,11 +74,13 @@ function nukedefender {
 # ---- BEGIN BUILD_LAB
 function build_lab {
   $ErrorActionPreference = "SilentlyContinue"
+  write-host("`n  When prompted you are being logged out simply click the Close button")
+  
   # DISABLE SERVER MANAGER LAUNCH AT BOOT
-  Get-ScheduledTask -TaskName ServerManager | Disable-ScheduledTask -Verbose 
+  write-host("`n  [++] Disabling Server Manager from launching on startup ")
+  Get-ScheduledTask -TaskName ServerManager | Disable-ScheduledTask | Out-Null
 
   # INSTALL AD-DOMAIN-SERVICES
-  write-host("`n  When prompted you are being logged out simply click the Close button")
   write-host("`n  [++] Installing Module Active Directory Domain Services (ADDS)")
   Install-windowsfeature -name AD-Domain-Services -IncludeManagementTools -WarningAction SilentlyContinue | Out-Null
 
@@ -245,7 +247,7 @@ function create_labcontent {
 
 # ---- BEGIN SERVER_BUILD
 function server_build {
-  $currentname="$env:COMPUTERNAME"
+  $currentname="$env:COMPUTERNAME" 
   $machine="$env:COMPUTERNAME"
   $domain="$env:USERDNSDOMAIN"
 
