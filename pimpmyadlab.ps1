@@ -292,7 +292,7 @@ function server_build {
   write-host("Computer Name is : $machine")
   write-host("  Domain Name is : $domain")
 
-  if ($machine -ne "PUNISHER") {
+  if ($machine -ne "PUNISHER") { 
     write-host ("`n Setting the name of this machine to PUNISHER and rebooting automatically...")
     write-host (" Run this script 1 more time and select 'P' in the menu to join the domain")
     Read-Host -Prompt "`n Press ENTER to continue..."
