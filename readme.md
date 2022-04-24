@@ -57,6 +57,8 @@ Each run will require the following :
 
 # Domain Controller Instructions: 
 
+## HYDRA-DC Domain Controller (Windows 2019 Server, Standard Eval Desktop Experience)
+
 - Domain Controller only (Windows 2019 Server)
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
@@ -83,7 +85,7 @@ Each run will require the following :
 
 # Workstation #1 Instructions: 
 
-- Punisher Workstation only (Windows 10 Enterprise Client Workstation)
+## Punisher Workstation only (Windows 10 Enterprise Client Workstation)
 
   - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
 
@@ -123,8 +125,7 @@ Each run will require the following :
     
 # Workstation #2 Instructions:
 
-
-- Spiderman Workstation only (Windows 10 Enterprise Client Workstation)
+## Spiderman Workstation only (Windows 10 Enterprise Client Workstation)
 
   - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
 
