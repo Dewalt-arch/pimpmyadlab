@@ -57,7 +57,7 @@ Each run will require the following :
 
 # Domain Controller Instructions: 
 ## HYDRA-DC Domain Controller 
-## (Windows 2019 Server, Standard Eval Desktop Experience)
+ (Windows 2019 Server, Standard Eval Desktop Experience)
 
 - Domain Controller only (Windows 2019 Server)
   - Install the OS in the vm 
