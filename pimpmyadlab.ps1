@@ -316,7 +316,7 @@ function server_build {
    function workstation_spiderman { 
     $currentname="$env:COMPUTERNAME"
     $machine="$env:COMPUTERNAME"
-    $domain="$env:USERDNSDOMAIN"
+    $domain="$env:USERDNSDOMAIN" 
   
     write-host("Computer Name is : $machine")
     write-host("  Domain Name is : $domain")
