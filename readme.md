@@ -56,8 +56,8 @@ Each run will require the following :
   - **X**  to exit the menu 
 
 # Domain Controller Instructions: 
-
-## HYDRA-DC Domain Controller (Windows 2019 Server, Standard Eval Desktop Experience)
+## HYDRA-DC Domain Controller 
+## (Windows 2019 Server, Standard Eval Desktop Experience)
 
 - Domain Controller only (Windows 2019 Server)
   - Install the OS in the vm 
