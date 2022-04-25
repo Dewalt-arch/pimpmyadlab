@@ -29,6 +29,11 @@ Requirements :
   - Yaseen (PNPT Certified) for Alpha/Beta Testing!
   - uCald4aMarine Release Candidate Testing
 
+# Revision 1.0.1a
+  - Added OS Version to on screen display above the menu 
+  - added OS Detection, script will fail if it finds any of the following
+    - "Windows 11", "Home", "Education" or "Server 2022"
+
 # Installation and usage : 
  On each machine Domain Contoller, Workstation1 and Workstation2 : 
  - Install the Operating System

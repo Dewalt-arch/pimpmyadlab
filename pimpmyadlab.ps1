@@ -11,6 +11,9 @@
 #  Yaseen (PNPT Certified) for Alpha/Beta Testing!
 #  uCald4aMarine Release Candidate Testing
 
+# add to detect version of the OS and fail if "Home" 
+# (Get-WmiObject -class Win32_OperatingSystem).Caption
+
 # ---- BEGIN NUKE DEFENDER FUNCTION
 function nukedefender {
   $ErrorActionPreference = "SilentlyContinue"
@@ -247,12 +250,13 @@ function create_labcontent {
 
 # ---- BEGIN SERVER_BUILD
 function server_build {
-  $currentname="$env:COMPUTERNAME" 
-  $machine="$env:COMPUTERNAME"
-  $domain="$env:USERDNSDOMAIN"
-
-  write-host("`n`n  Computer Name is : $machine")
-  write-host("    Domain Name is : $domain")
+  #$currentname="$env:COMPUTERNAME" 
+  #$machine="$env:COMPUTERNAME"
+  #$domain="$env:USERDNSDOMAIN"
+    
+  write-host("`n`n   Computer Name : $machine")
+  write-host("     Domain Name : $domain")
+  write-host("      OS Version : $osversion")
 
   if($currentname -ne "HYDRA-DC") {
       write-host("`n  Computer Name is Incorrect Setting HYDRA-DC")
@@ -284,13 +288,15 @@ function server_build {
       # ---- END SERVER_BUILD
 
 # ---- BEGIN WORKSTATION_PUNISHER
-  function workstation_punisher { 
-  $currentname="$env:COMPUTERNAME"
-  $machine="$env:COMPUTERNAME"
-  $domain="$env:USERDNSDOMAIN"
 
-  write-host("Computer Name is : $machine")
-  write-host("  Domain Name is : $domain")
+function workstation_punisher { 
+ # $currentname="$env:COMPUTERNAME"
+ # $machine="$env:COMPUTERNAME"
+ # $domain="$env:USERDNSDOMAIN"
+
+  write-host("`n`n   Computer Name : $machine")
+  write-host("     Domain Name : $domain")
+  write-host("      OS Version : $osversion")
 
   if ($machine -ne "PUNISHER") { 
     write-host ("`n Setting the name of this machine to PUNISHER and rebooting automatically...")
@@ -313,13 +319,14 @@ function server_build {
   # ---- END WORKSTATION_PUNISHER
     
 # ---- BEGIN WORKSTATION_SPIDERMAN
-   function workstation_spiderman { 
-    $currentname="$env:COMPUTERNAME"
-    $machine="$env:COMPUTERNAME"
-    $domain="$env:USERDNSDOMAIN" 
-  
-    write-host("Computer Name is : $machine")
-    write-host("  Domain Name is : $domain")
+function workstation_spiderman { 
+  #  $currentname="$env:COMPUTERNAME"
+  #  $machine="$env:COMPUTERNAME"
+  #  $domain="$env:USERDNSDOMAIN" 
+      
+    write-host("`n`n   Computer Name : $machine")
+    write-host("     Domain Name : $domain")
+    write-host("      OS Version : $osversion")
   
     if ($machine -ne "SPIDERMAN") {
       write-host ("`n Setting the name of this machine to SPIDERMAN and rebooting automatically...")
@@ -342,33 +349,68 @@ function server_build {
     } 
     # ---- END WORKSTATION_SPIDERMAN
 
-  # ---- BEGIN MAIN
-    $ErrorActionPreference = "SilentlyContinue"
-    do {
-    clear 
-    Write-Host "`n`n`tTCM-Academy PEH Course AD-Lab Build Menu - Select an option`n"
-    Write-Host "`tPress 'D' to setup Hydra-DC Domain Controller"
-    Write-host "`t(must be run 3 times)`n"
-    Write-Host "`tPress 'P' to setup Punisher Workstation and join the domain Marvel.local"
-    Write-host "`t(must be run 2 times)`n"
-    Write-Host "`tPress 'S' to setup Spiderman Workstation and join the domain Marvel.local" 
-    Write-host "`t(must be run 2 times)`n"
-    Write-host "`tPress 'N' to only run the NukeDefender Function`n"
-    Write-Host "`tPress 'X' to Exit"
-    $choice = Read-Host "`n`tEnter Choice" } until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'X'))
+# ---- BEGIN MENU
+function menu {
+  do {
+  Write-Host "`n`n`tTCM-Academy PEH Course AD-Lab Build Menu - Select an option`n"
+  Write-Host "`tPress 'D' to setup Hydra-DC Domain Controller"
+  Write-host "`t(must be run 3 times)`n"
+  Write-Host "`tPress 'P' to setup Punisher Workstation and join the domain Marvel.local"
+  Write-host "`t(must be run 2 times)`n"
+  Write-Host "`tPress 'S' to setup Spiderman Workstation and join the domain Marvel.local" 
+  Write-host "`t(must be run 2 times)`n"
+  Write-host "`tPress 'N' to only run the NukeDefender Function`n"
+  Write-Host "`tPress 'X' to Exit"
+  $choice = Read-Host "`n`tEnter Choice" } until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'X'))
 
-    switch ($choice) {
-      'D'{  Write-Host "`n You have selected Hydra-DC domain controller"
-            nukedefender 
-            server_build }
-      'P'{  Write-Host "`n You have selected Punisher Workstation"
-            nukedefender 
-            workstation_punisher }
-      'S'{  Write-Host "`n You have selected Spiderman Workstation"
-            nukedefender 
-            workstation_spiderman }
-      'N'{  Write-Host "`n You have selected to only run the NukeDefender function"
-            nukedefender }
-      'X'{Return}
+  switch ($choice) {
+    'D'{  Write-Host "`n You have selected Hydra-DC domain controller"
+          nukedefender 
+          server_build }
+    'P'{  Write-Host "`n You have selected Punisher Workstation"
+          nukedefender 
+          workstation_punisher }
+    'S'{  Write-Host "`n You have selected Spiderman Workstation"
+          nukedefender 
+          workstation_spiderman }
+    'N'{  Write-Host "`n You have selected to only run the NukeDefender function"
+          nukedefender }
+    'X'{Return}
     }
-    # ---- END MAIN 
+  }
+
+
+  # ---- BEGIN MAIN
+    # REVISION - 1.0.1a 
+  $ErrorActionPreference = "SilentlyContinue"
+  clear 
+  $currentname="$env:COMPUTERNAME"
+  $machine="$env:COMPUTERNAME"
+  $domain="$env:USERDNSDOMAIN" 
+  $osversion=((Get-WmiObject -class Win32_OperatingSystem).Caption)
+
+  write-host("`n`n   Computer Name : $machine")
+  write-host("     Domain Name : $domain")
+  write-host("      OS Version : $osversion")
+
+  if ("$osversion" -eq "Microsoft Windows Server 2019 Standard Evaluation") { menu }
+    elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise Evaluation") { menu }
+    elseif ("$osversion" -like "Home") {      
+      write-host("`n [!!] Windows Home is unable to join a domain, please use the correct version of windows")
+      exit 
+      }
+    elseif ("$osversion" -like "Education") {
+      write-host("`n [!!] Windows Educational versions cannot be used with this lab")
+    }
+    elseif ("$osversion" -like "Windows 11") {
+      write-host("`n [!!] Windows 11 cannot be used with this lab")
+      exit 
+      }
+    elseif ("$osversion" -like "Windows Server 2022") {
+      write-host("`n [!!] Windows Server 2022 cannot be used with this lab")
+      exit 
+      }
+    else { write-host("Unable to find a suitable OS Version for this lab - Exiting") 
+      }
+
+  # ---- END MAIN 
