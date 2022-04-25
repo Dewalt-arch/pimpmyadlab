@@ -44,7 +44,7 @@ Requirements :
 Each run will require the following :
 - start / run / cmd (as administrator)
 - powershell -ep bypass 
-- cd \to\where\you\saved\the\script
+- cd \to\where\you\saved\the\script 
 - .\pimpmyadlab.ps1
 - You will be presented with a menu
 

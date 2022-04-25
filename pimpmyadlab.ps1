@@ -4,18 +4,18 @@
 # DomainController (Hydra-DC) and Both Workstation (Punisher & Spiderman)
 # https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 #
-# Scripted By: Dewalt 
+# Scripted By: Dewalt         
+# Revision 1.0.1a 
 #    
 # Special Thanks to :
 #  ToddAtLarge (PNPT Certified) for the NukeDefender script 
 #  Yaseen (PNPT Certified) for Alpha/Beta Testing!
 #  uCald4aMarine Release Candidate Testing
 
-# add to detect version of the OS and fail if "Home" 
-# (Get-WmiObject -class Win32_OperatingSystem).Caption
+
 
 # ---- BEGIN NUKE DEFENDER FUNCTION
-function nukedefender {
+  function nukedefender {
   $ErrorActionPreference = "SilentlyContinue"
 
   # DISABLE UAC, FIREWALL, DEFENDER
@@ -75,7 +75,7 @@ function nukedefender {
   # ---- END NUKEDEFENDER
 
 # ---- BEGIN BUILD_LAB
-function build_lab {
+  function build_lab {
   $ErrorActionPreference = "SilentlyContinue"
   write-host("`n  When prompted you are being logged out simply click the Close button")
   
@@ -109,7 +109,7 @@ function build_lab {
   # ---- END BUILD_LAB
 
 # ---- BEGIN CREATE_LABCONTENT 
-function create_labcontent {
+  function create_labcontent {
   $ErrorActionPreference = "SilentlyContinue"
   
   # INSTALL AD-CERTIFICATE SERVICES
@@ -152,11 +152,6 @@ function create_labcontent {
   $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
   write-host("`n  [++] Setting DNS Server to 127.0.0.1 on interface $adapter")
   Set-DNSClientServerAddress "$adapter" -ServerAddresses ("127.0.0.1") | Out-Null
-
-  # DEBATING :
-  # ADMINISTRATOR PASSWORD IS P@$$w0rd! PER COURSE INSTRUCTION... CHANGE IT?
-  # MAY CREATE TOO MUCH CONFUSION AS THE USER IS GOING TO INSTALL THE OS AND SET THE
-  # PASSWORD FOR ADMINISTRATOR
 
   # CREATE USER PETER PARKER (PPARKER) AND ASSIGN GROUPS
   New-ADUser -Name "Peter Parker" -GivenName "Peter" -Surname "Parker" -SamAccountName "pparker" `
@@ -249,10 +244,7 @@ function create_labcontent {
   # ---- END CREATE_LABCONTENT
 
 # ---- BEGIN SERVER_BUILD
-function server_build {
-  #$currentname="$env:COMPUTERNAME" 
-  #$machine="$env:COMPUTERNAME"
-  #$domain="$env:USERDNSDOMAIN"
+  function server_build {
     
   write-host("`n`n   Computer Name : $machine")
   write-host("     Domain Name : $domain")
@@ -289,40 +281,34 @@ function server_build {
 
 # ---- BEGIN WORKSTATION_PUNISHER
 
-function workstation_punisher { 
- # $currentname="$env:COMPUTERNAME"
- # $machine="$env:COMPUTERNAME"
- # $domain="$env:USERDNSDOMAIN"
+  function workstation_punisher { 
 
-  write-host("`n`n   Computer Name : $machine")
-  write-host("     Domain Name : $domain")
-  write-host("      OS Version : $osversion")
+    write-host("`n`n   Computer Name : $machine")
+    write-host("     Domain Name : $domain")
+    write-host("      OS Version : $osversion")
 
-  if ($machine -ne "PUNISHER") { 
-    write-host ("`n Setting the name of this machine to PUNISHER and rebooting automatically...")
-    write-host (" Run this script 1 more time and select 'P' in the menu to join the domain")
-    Read-Host -Prompt "`n Press ENTER to continue..."
-    Rename-Computer -NewName "PUNISHER" -Restart
-  }
-  elseif ($machine -eq "PUNISHER") {
-    mkdir C:\Share
-    New-SmbShare -Name "Share" -Path "C:\Share" -ChangeAccess "Users" -FullAccess "Everyone" -WarningAction SilentlyContinue | Out-Null
-    $DCDNS=Read-Host "`n Enter the IP Address of the HYDRA-DC Domain Controller here and press enter "
-    $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
-    write-host(" Setting DNS Server to $DCDNS on adapter $adapter")
-    Set-DNSClientServerAddress "$adapter" -ServerAddresses ("$DCDNS")
-    write-host("`n Joining machine to domain Marvel.local `n Enter the Administrator username and password for the HYDRA-DC Machine at the logon prompt")
-    add-computer -domainname "MARVEL.LOCAL" -restart | Out-Null
-  }
-  else { write-host("Nothing to do here") }
-  } 
-  # ---- END WORKSTATION_PUNISHER
+    if ($machine -ne "PUNISHER") { 
+      write-host ("`n Setting the name of this machine to PUNISHER and rebooting automatically...")
+      write-host (" Run this script 1 more time and select 'P' in the menu to join the domain")
+      Read-Host -Prompt "`n Press ENTER to continue..."
+      Rename-Computer -NewName "PUNISHER" -Restart
+    }
+    elseif ($machine -eq "PUNISHER") {
+      mkdir C:\Share
+      New-SmbShare -Name "Share" -Path "C:\Share" -ChangeAccess "Users" -FullAccess "Everyone" -WarningAction SilentlyContinue | Out-Null
+      $DCDNS=Read-Host "`n Enter the IP Address of the HYDRA-DC Domain Controller here and press enter "
+      $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
+      write-host(" Setting DNS Server to $DCDNS on adapter $adapter")
+      Set-DNSClientServerAddress "$adapter" -ServerAddresses ("$DCDNS")
+      write-host("`n Joining machine to domain Marvel.local `n Enter the Administrator username and password for the HYDRA-DC Machine at the logon prompt")
+      add-computer -domainname "MARVEL.LOCAL" -restart | Out-Null
+    }
+    else { write-host("Nothing to do here") }
+    } 
+# ---- END WORKSTATION_PUNISHER
     
 # ---- BEGIN WORKSTATION_SPIDERMAN
-function workstation_spiderman { 
-  #  $currentname="$env:COMPUTERNAME"
-  #  $machine="$env:COMPUTERNAME"
-  #  $domain="$env:USERDNSDOMAIN" 
+  function workstation_spiderman { 
       
     write-host("`n`n   Computer Name : $machine")
     write-host("     Domain Name : $domain")
@@ -331,7 +317,8 @@ function workstation_spiderman {
     if ($machine -ne "SPIDERMAN") {
       write-host ("`n Setting the name of this machine to SPIDERMAN and rebooting automatically...")
       write-host (" Run this script 1 more time and select 'S' in the menu to join the domain")
-      Read-Host -Prompt "`n Press ENTER to continue..."
+      Read-Host
+       -Prompt "`n Press ENTER to continue..."
       Rename-Computer -NewName "SPIDERMAN" -Restart
     }
     elseif ($machine -eq "SPIDERMAN") {
@@ -347,21 +334,21 @@ function workstation_spiderman {
     }
     else { write-host("Nothing to do here") }
     } 
-    # ---- END WORKSTATION_SPIDERMAN
+# ---- END WORKSTATION_SPIDERMAN
 
 # ---- BEGIN MENU
-function menu {
+  function menu {
   do {
-  Write-Host "`n`n`tTCM-Academy PEH Course AD-Lab Build Menu - Select an option`n"
-  Write-Host "`tPress 'D' to setup Hydra-DC Domain Controller"
-  Write-host "`t(must be run 3 times)`n"
-  Write-Host "`tPress 'P' to setup Punisher Workstation and join the domain Marvel.local"
-  Write-host "`t(must be run 2 times)`n"
-  Write-Host "`tPress 'S' to setup Spiderman Workstation and join the domain Marvel.local" 
-  Write-host "`t(must be run 2 times)`n"
-  Write-host "`tPress 'N' to only run the NukeDefender Function`n"
-  Write-Host "`tPress 'X' to Exit"
-  $choice = Read-Host "`n`tEnter Choice" } until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'X'))
+    Write-Host "`n`n`tTCM-Academy PEH Course AD-Lab Build Menu - Select an option`n"
+    Write-Host "`tPress 'D' to setup Hydra-DC Domain Controller"
+    Write-host "`t(must be run 3 times)`n"
+    Write-Host "`tPress 'P' to setup Punisher Workstation and join the domain Marvel.local"
+    Write-host "`t(must be run 2 times)`n"
+    Write-Host "`tPress 'S' to setup Spiderman Workstation and join the domain Marvel.local" 
+    Write-host "`t(must be run 2 times)`n"
+    Write-host "`tPress 'N' to only run the NukeDefender Function`n"
+    Write-Host "`tPress 'X' to Exit"
+    $choice = Read-Host "`n`tEnter Choice" } until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'X'))
 
   switch ($choice) {
     'D'{  Write-Host "`n You have selected Hydra-DC domain controller"
@@ -378,10 +365,10 @@ function menu {
     'X'{Return}
     }
   }
+# ---- END MENU  
 
+# ---- BEGIN MAIN
 
-  # ---- BEGIN MAIN
-    # REVISION - 1.0.1a 
   $ErrorActionPreference = "SilentlyContinue"
   clear 
   $currentname="$env:COMPUTERNAME"
@@ -393,9 +380,12 @@ function menu {
   write-host("     Domain Name : $domain")
   write-host("      OS Version : $osversion")
 
-  if ("$osversion" -eq "Microsoft Windows Server 2019 Standard Evaluation") { menu }
-    elseif ("$osversion" -eq "Microsoft Windows Server 2016 Standard Evaluation") { menu }  
-    elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise Evaluation") { menu }
+  if ("$osversion" -eq "Microsoft Windows Server 2019 Standard Evaluation") 
+    { menu }
+    elseif ("$osversion" -eq "Microsoft Windows Server 2016 Standard Evaluation") 
+    { menu }  
+    elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise Evaluation") 
+    { menu }
     elseif ("$osversion" -like "Home") {      
       write-host("`n [!!] Windows Home is unable to join a domain, please use the correct version of windows")
       exit 
@@ -414,4 +404,4 @@ function menu {
     else { write-host("Unable to find a suitable OS Version for this lab - Exiting") 
       }
 
-  # ---- END MAIN 
+# ---- END MAIN 

