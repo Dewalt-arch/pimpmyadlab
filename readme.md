@@ -30,7 +30,7 @@ Requirements :
 
 # Revision 1.0.1a
   - Added OS Version to on screen display above the menu 
-  - added OS Detection, script will fail if it finds any of the following
+  - Added OS Detection, script will fail if it finds any of the following
     - "Windows 11", "Home", "Education" or "Server 2022"
 
 # Installation and usage : 

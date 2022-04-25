@@ -12,8 +12,6 @@
 #  Yaseen (PNPT Certified) for Alpha/Beta Testing!
 #  uCald4aMarine Release Candidate Testing
 
-
-
 # ---- BEGIN NUKE DEFENDER FUNCTION
   function nukedefender {
   $ErrorActionPreference = "SilentlyContinue"
