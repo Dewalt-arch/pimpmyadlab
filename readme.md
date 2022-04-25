@@ -23,7 +23,6 @@ Requirements :
  and menu functionality added to PimpmyADLab.ps1 for those that just need to 
  NukeDefender only and not rebuild the entire lab.  
 
-
 # Special Thanks to :
   - ToddAtLarge (PNPT Certified) for the NukeDefender script 
   - Yaseen (PNPT Certified) for Alpha/Beta Testing!
