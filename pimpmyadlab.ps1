@@ -394,6 +394,7 @@ function menu {
   write-host("      OS Version : $osversion")
 
   if ("$osversion" -eq "Microsoft Windows Server 2019 Standard Evaluation") { menu }
+    elseif ("$osversion" -eq "Microsoft Windows Server 2016 Standard Evaluation") { menu }  
     elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise Evaluation") { menu }
     elseif ("$osversion" -like "Home") {      
       write-host("`n [!!] Windows Home is unable to join a domain, please use the correct version of windows")
