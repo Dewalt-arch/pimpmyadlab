@@ -5,7 +5,7 @@ TCM-Academy Practical Ethical Hacker Course - Active Directory Lab build script
 - Course Link : https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
  
 Requirements : 
-- DomainController (Hydra-DC)
+- DomainController (Hydra-DC) 
     - Windows 2019 Server (Standard Evaluation - Desktop Experience) required
  
 - Workstations 
@@ -28,6 +28,38 @@ Requirements :
   - Yaseen (PNPT Certified) for Alpha/Beta Testing!
   - uCald4aMarine Release Candidate Testing
 
+# Revision 1.0.2 
+  - Moved items common to both workstations to a common function workstations_common 
+  
+    - Added .Net 2.0 for Powershell -v 2 -ep bypass for Powerview.Ps1 
+  
+    - Downloads Powerview.ps1 v1.9 (older version) to \TCM-Academy\Powerview.ps1 
+      - Loading powerview will be : 
+      - cmd (as administrator)
+      - powerview -version 2 -ep bypass 
+      - . c:\tcm-academy\Powerview.ps1
+        - Get-Net* Functions should now work normally per course instruction
+  
+    - Added PSTools download (quality of life improvement)
+      - PSTools unzipped to C:\PSTools 
+    
+    - Added Function to download and install latest version of git from github
+      - function is currently disabled
+    
+    - Added autodetection of domain controller ip address 
+      - automatically sets dns configuration on the workstation
+      - elminates prompting the student for the ip address of the domain controller
+      - removed prompt to enter ip address of the domain controller 
+
+    - Added auto join of the domain marvel.local 
+      - Removed prompt to join the domain, will be done automatically now
+
+    - Added Git Clone of PowershellMafia Powersploit 
+      - cloned to $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit
+      - powershell -version 2 -ep bypass 
+      - Import-module $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit\Recon
+      - Get-Net* commands should now work
+  
 # Revision 1.0.1a
   - Added OS Version to on screen display above the menu 
   - Added OS Detection, script will fail if it finds any of the following

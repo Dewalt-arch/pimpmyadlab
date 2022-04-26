@@ -5,7 +5,7 @@
 # dont need to rebuild the entire lab and only need the fixes provides by 
 # the nukedefender function itself.  
 #
-# Scripted By: Dewalt 
+# Scripted By: Dewalt  
 #    
 # Special Thanks to :
 #  ToddAtLarge (PNPT Certified) for the NukeDefender script 

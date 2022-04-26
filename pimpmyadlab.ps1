@@ -5,15 +5,17 @@
 # https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 #
 # Scripted By: Dewalt         
-# Revision 1.0.1a 
+# Revision 1.0.2 
 #    
 # Special Thanks to :
 #  ToddAtLarge (PNPT Certified) for the NukeDefender script 
 #  Yaseen (PNPT Certified) for Alpha/Beta Testing!
 #  uCald4aMarine Release Candidate Testing
 
+# GLOBAL VARIABLES 
+
 # ---- BEGIN NUKE DEFENDER FUNCTION
-  function nukedefender {
+function nukedefender { 
   $ErrorActionPreference = "SilentlyContinue"
 
   # DISABLE UAC, FIREWALL, DEFENDER
@@ -39,7 +41,7 @@
   reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SubmitSamplesConsent" /t REG_DWORD /d "2" /f > $null
   reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v "Start" /t REG_DWORD /d "0" /f > $null
   reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" /v "Start" /t REG_DWORD /d "0" /f > $null
-
+  
   # DISABLE SERVICES
   write-host("`n  [++] Nuking Defender Related Services")
   schtasks /Change /TN "Microsoft\Windows\ExploitGuard\ExploitGuard MDM policy Refresh" /Disable > $null
@@ -53,7 +55,7 @@
   reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d "1" /f > $null
 
   # DISABLE REMOTE-UAC ( should solved the rcp_s_access_denied issue with Impacket may need to include w/ workstations )
-  write-host("`n  [++] Nuking UAC")
+  write-host("`n  [++] Nuking UAC and REMOTE UAC")
   reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "LocalAccountTokenFilterPolicy" /t REG_DWORD /d "1" /f > $null
 
   # ENABLE ICMP ECHO IPV4 AND IPV6 (Shouldnt be needed firewall is off)
@@ -73,13 +75,19 @@
   # ---- END NUKEDEFENDER
 
 # ---- BEGIN BUILD_LAB
-  function build_lab {
+function build_lab {
   $ErrorActionPreference = "SilentlyContinue"
   write-host("`n  When prompted you are being logged out simply click the Close button")
   
   # DISABLE SERVER MANAGER LAUNCH AT BOOT
   write-host("`n  [++] Disabling Server Manager from launching on startup ")
   Get-ScheduledTask -TaskName ServerManager | Disable-ScheduledTask | Out-Null
+
+  # INSTALL GIT 
+  setup_git
+
+  # GIT POWERSHELL MAFIA POWERSPLOIT
+  git_powersploit
 
   # INSTALL AD-DOMAIN-SERVICES
   write-host("`n  [++] Installing Module Active Directory Domain Services (ADDS)")
@@ -107,7 +115,7 @@
   # ---- END BUILD_LAB
 
 # ---- BEGIN CREATE_LABCONTENT 
-  function create_labcontent {
+function create_labcontent {
   $ErrorActionPreference = "SilentlyContinue"
   
   # INSTALL AD-CERTIFICATE SERVICES
@@ -146,6 +154,12 @@
   reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint" /v "NoWarningNoElevationOnInstall" /t REG_DWORD /d "1" /f > $null
   reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint" /v "RestrictDriverInstallationToAdministrators" /t REG_DWORD /d "0" /f > $null
 
+  # SET LOCALACCOUNTTOKENFILTERPOLICY
+  reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system" /v "LocalAccountTokenFilterPolicy" /t REG_DWORD /d "1" /f
+
+  # SET ALWAYS INSTALL ELEVATED 
+  red add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer" -v "AlwaysInstallElevated" /t REG_DWORD /d "1" /f > $null 
+  
   #Get-DNSClientServerAddress
   $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
   write-host("`n  [++] Setting DNS Server to 127.0.0.1 on interface $adapter")
@@ -242,8 +256,7 @@
   # ---- END CREATE_LABCONTENT
 
 # ---- BEGIN SERVER_BUILD
-  function server_build {
-    
+function server_build {
   write-host("`n`n   Computer Name : $machine")
   write-host("     Domain Name : $domain")
   write-host("      OS Version : $osversion")
@@ -277,65 +290,137 @@
       }
       # ---- END SERVER_BUILD
 
+function git_powersploit {
+  write-host("`n  [++] Git Cloning PowerSploit to $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit")
+  git clone https://github.com/PowerShellMafia/PowerSploit $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit > $null 
+  # Import-Module $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit\Recon
+  }
+
+# ---- BEGIN SETUP_GIT FUNCTION
+function setup_git {
+  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+  $architecture = '64-bit'
+  $assetName = "Git-*-$architecture.exe"
+  
+  $gitHubApi = 'https://api.github.com/repos/git-for-windows/git/releases/latest'
+  $response = Invoke-WebRequest -Uri $gitHubApi -UseBasicParsing
+  $json = $response.Content | ConvertFrom-Json
+  $release = $json.assets | Where-Object Name -like $assetName
+  
+  # download 
+  write-host("`n  [++] Downloading $($release.name)")
+  Start-BitsTransfer -Source $release.browser_download_url -Destination ".\$($release.name)" | Out-Null
+  
+  # install  
+  write-host("`n  [++] Installing $($release.name)")
+  Start-Process .\$($release.name) -argumentlist "/silent /supressmsgboxes" -Wait  | Out-Null 
+  rm .\$($release.name)  
+  
+  # reload environment variables 
+  $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")  
+  }
+# ---- END SETUP_GIT FUNCTION
+
+
+# ---- BEGIN WORKSTATIONS_COMMON FUNCTION  
+function workstations_common { 
+
+  # Download and Install Git for Windows 
+  setup_git 
+  git_powersploit
+  
+  # RSAT
+  write-host("`n  [++] Installing Remote System Administration Tools (RSAT)") 
+  Add-WindowsCapability -Online -Name Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0 | Out-Null
+
+  # needed for powerview fix : powershell -version 2 -ep bypass 
+  write-host("`n  [++] Installing .Net 2.0")
+  Add-WindowsCapability -Online -Name NetFx2~~~~ | Out-Null
+    
+  # dotnet v3 - why not we are already here (leaving commented out at this time)
+  write-host("`n  [++] Installing .Net 3.0")
+  Add-WindowsCapability -Online -Name NetFx3~~~~ | Out-Null 
+
+  # download old version of Powerview so it works with course material 
+  # requires .net v2 and the powershell -version 2 -ep bypass for this 
+  # (course material update for this one)
+  mkdir C:\TCM-ACADEMY > $null 
+  write-host("`n  [++] Downloading Powerview v1.9 to C:\TCM-Academy")
+  Invoke-WebRequest  https://raw.githubusercontent.com/PowerShellEmpire/PowerTools/version_1.9/PowerView/powerview.ps1 -o C:\TCM-Academy\Powerview.ps1 | Out-Null
+  
+  # once joined to the domain needs to run 
+  write-host("`n  [++] Downloading PSTools to C:\TCM-Academy")
+  Invoke-WebRequest  https://download.sysinternals.com/files/PSTools.zip -o C:\TCM-Academy\PStools.zip | Out-Null
+  Start-BitsTransfer -Source "https://download.sysinternals.com/files/PSTools.zip" -Destination "C:\TCM-Aacademy\PSTools.zip" | Out-Null
+  write-host("`n  [++] Extracting PSTools to C:\PSTools")
+  Expand-Archive -Force C:\TCM-Academy\PSTools.zip C:\PSTools | Out-Null 
+  
+  #make the share 
+  mkdir C:\Share > $null 
+  New-SmbShare -Name "Share" -Path "C:\Share" -ChangeAccess "Users" -FullAccess "Everyone" -WarningAction SilentlyContinue | Out-Null
+    
+  #get dns and set dns-config to domain controller ip address
+  # $DCDNS=Read-Host "`n Enter the IP Address of the HYDRA-DC Domain Controller here and press enter "
+  $DCDNS=(Test-Connection -comp HYDRA-DC -Count 1).ipv4address.ipaddressToString
+  write-host(" Found HYDRA-DC At $DCDNS")
+  $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
+  write-host(" Setting DNS Server to $DCDNS on adapter $adapter")
+  Set-DNSClientServerAddress "$adapter" -ServerAddresses ("$DCDNS")
+
+  # join domain 
+  write-host("`n Joining machine to domain Marvel.local")
+  add-computer -domainname "MARVEL.LOCAL" -username administrator -restart | Out-Null
+  $domain = "MARVEL"
+  $password = "Password2019!@#" | ConvertTo-SecureString -asPlainText -Force
+  $username = "$domain\tstark" 
+  $credential = New-Object System.Management.Automation.PSCredential($username,$password)
+  Add-Computer -DomainName $domain -Credential $credential  | Out-Null 
+  }      
+
 # ---- BEGIN WORKSTATION_PUNISHER
+function workstation_punisher { 
+  write-host("`n`n   Computer Name : $machine")
+  write-host("     Domain Name : $domain")
+  write-host("      OS Version : $osversion")
 
-  function workstation_punisher { 
-
-    write-host("`n`n   Computer Name : $machine")
-    write-host("     Domain Name : $domain")
-    write-host("      OS Version : $osversion")
-
-    if ($machine -ne "PUNISHER") { 
-      write-host ("`n Setting the name of this machine to PUNISHER and rebooting automatically...")
-      write-host (" Run this script 1 more time and select 'P' in the menu to join the domain")
-      Read-Host -Prompt "`n Press ENTER to continue..."
-      Rename-Computer -NewName "PUNISHER" -Restart
+  if ($machine -ne "PUNISHER") { 
+    write-host ("`n Setting the name of this machine to PUNISHER and rebooting automatically...")
+    write-host (" Run this script 1 more time and select 'P' in the menu to join the domain")
+    Read-Host -Prompt "`n Press ENTER to continue..."
+    Rename-Computer -NewName "PUNISHER" -Restart
     }
     elseif ($machine -eq "PUNISHER") {
-      mkdir C:\Share
-      New-SmbShare -Name "Share" -Path "C:\Share" -ChangeAccess "Users" -FullAccess "Everyone" -WarningAction SilentlyContinue | Out-Null
-      $DCDNS=Read-Host "`n Enter the IP Address of the HYDRA-DC Domain Controller here and press enter "
-      $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
-      write-host(" Setting DNS Server to $DCDNS on adapter $adapter")
-      Set-DNSClientServerAddress "$adapter" -ServerAddresses ("$DCDNS")
-      write-host("`n Joining machine to domain Marvel.local `n Enter the Administrator username and password for the HYDRA-DC Machine at the logon prompt")
-      add-computer -domainname "MARVEL.LOCAL" -restart | Out-Null
+      workstations_common
+      Read-Host -Prompt "`n All done! $machine is all setup! `n Press Enter to reboot and Login as MARVEL\fcastle and Password1 "
+      restart-computer 
     }
     else { write-host("Nothing to do here") }
     } 
 # ---- END WORKSTATION_PUNISHER
     
 # ---- BEGIN WORKSTATION_SPIDERMAN
-  function workstation_spiderman { 
-      
-    write-host("`n`n   Computer Name : $machine")
-    write-host("     Domain Name : $domain")
-    write-host("      OS Version : $osversion")
+function workstation_spiderman { 
+  write-host("`n`n   Computer Name : $machine")
+  write-host("     Domain Name : $domain")
+  write-host("      OS Version : $osversion")
   
-    if ($machine -ne "SPIDERMAN") {
-      write-host ("`n Setting the name of this machine to SPIDERMAN and rebooting automatically...")
-      write-host (" Run this script 1 more time and select 'S' in the menu to join the domain")
-      Read-Host
-       -Prompt "`n Press ENTER to continue..."
-      Rename-Computer -NewName "SPIDERMAN" -Restart
+  if ($machine -ne "SPIDERMAN") {
+    write-host ("`n Setting the name of this machine to SPIDERMAN and rebooting automatically...")
+    write-host (" Run this script 1 more time and select 'S' in the menu to join the domain")
+    Read-Host -Prompt "`n Press ENTER to continue..."
+    Rename-Computer -NewName "SPIDERMAN" -Restart
     }
     elseif ($machine -eq "SPIDERMAN") {
-      mkdir C:\Share
-      New-SmbShare -Name "Share" -Path "C:\Share" -ChangeAccess "Users" -FullAccess "Everyone" -WarningAction SilentlyContinue | Out-Null
-      $DCDNS=Read-Host "`n Enter the IP Address of the HYDRA-DC Domain Controller here and press enter "
-      write-host("$DCDNS")
-      $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
-      write-host(" Setting DNS Server to $DCDNS on adapter $adapter")
-      Set-DNSClientServerAddress "$adapter" -ServerAddresses ("$DCDNS")
-      write-host("`n Joining machine to domain Marvel.local `n Enter the Administrator username and password for the HYDRA-DC Machine at the logon prompt")
-      add-computer -domainname "MARVEL.LOCAL" -restart | Out-Null
-    }
+      workstations_common 
+      Read-Host -Prompt "`n All done! $machine is all setup! `n Press Enter to reboot and Login as MARVEL\pparker and Password2 "
+      restart-computer 
+      }
     else { write-host("Nothing to do here") }
     } 
 # ---- END WORKSTATION_SPIDERMAN
 
 # ---- BEGIN MENU
-  function menu {
+function menu {
   do {
     Write-Host "`n`n`tTCM-Academy PEH Course AD-Lab Build Menu - Select an option`n"
     Write-Host "`tPress 'D' to setup Hydra-DC Domain Controller"
@@ -366,12 +451,11 @@
 # ---- END MENU  
 
 # ---- BEGIN MAIN
-
   $ErrorActionPreference = "SilentlyContinue"
   clear 
-  $currentname="$env:COMPUTERNAME"
-  $machine="$env:COMPUTERNAME"
-  $domain="$env:USERDNSDOMAIN" 
+  $currentname=$env:COMPUTERNAME
+  $machine=$env:COMPUTERNAME
+  $domain=$env:USERDNSDOMAIN
   $osversion=((Get-WmiObject -class Win32_OperatingSystem).Caption)
 
   write-host("`n`n   Computer Name : $machine")
@@ -401,5 +485,4 @@
       }
     else { write-host("Unable to find a suitable OS Version for this lab - Exiting") 
       }
-
 # ---- END MAIN 
