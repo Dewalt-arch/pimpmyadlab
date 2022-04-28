@@ -276,16 +276,16 @@ function server_build {
         Read-Host -Prompt "`n`n Press ENTER to continue..."
         build_lab
         }
-        elseif ($domain -eq "MARVEL.LOCAL" -And $machine -eq "HYDRA-DC") {
-          write-host("`n Computer name and Domain are correct : Executing CreateContent Function ")
-          create_labcontent
-          write-host("`n Script Run 3 of 3 - We are all done! Rebooting one last time! o7 Happy Hacking! ")
-          $dcip=Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress
-          write-host("`n`n Write this down! We need this in the Workstation Configruation... Domain Controller IP Address: $dcip `n`n")
-          Read-Host -Prompt "`n`n Press ENTER to continue..."
-          Restart-Computer
-          }
-        else {
+      elseif ($domain -eq "MARVEL.LOCAL" -And $machine -eq "HYDRA-DC") {
+        write-host("`n Computer name and Domain are correct : Executing CreateContent Function ")
+        create_labcontent
+        write-host("`n Script Run 3 of 3 - We are all done! Rebooting one last time! o7 Happy Hacking! ")
+        $dcip=Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress
+        write-host("`n`n Write this down! We need this in the Workstation Configruation... Domain Controller IP Address: $dcip `n`n")
+        Read-Host -Prompt "`n`n Press ENTER to continue..."
+        Restart-Computer
+        }
+      else {
         write-host("Giving UP! There is nothing to do!") }
       }
       # ---- END SERVER_BUILD

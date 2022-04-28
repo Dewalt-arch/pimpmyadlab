@@ -144,8 +144,8 @@ Each run will require the following :
     - After the reboot, Run script again, Select Menu Option P for Run #2 
 
   - ***Run 2*** 
-    - Enter the ip address of the domain controller when prompted
-    - Enter the Hydra-DC Administrator username and password when prompted to join domain Marvel when prompted
+    - Automatically acquires the ip address of HYDRA-DC and assigns that ip to the DNS Configuration
+    - Automatically joins the Marvel domain
     - Reboots automatically
      
   - If the workstation vm rebooted automatically
@@ -154,8 +154,7 @@ Each run will require the following :
   - If the machine did not reboot automatically :
     - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
     - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
-    - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
-    - Try again with correct logon credentials
+    - Double check your network setup in the hypervisor and re-run the script if it fails
 
     
 # Workstation #2 Instructions:
@@ -182,8 +181,8 @@ Each run will require the following :
     - After the reboot, Run script again, Select Menu Option S for Run #2 
   
   - ***Run 2*** 
-    - Enter the ip address of the domain controller when prompted
-    - Enter the Hydra-DC Adminstrator username and password to join the domain Marvel when prompted
+    - Automatically acquires the ip address of HYDRA-DC and assigns that ip to the DNS Configuration
+    - Automatically joins the Marvel domain
     - Reboots automatically
       
   - If the workstation vm rebooted automatically 
@@ -192,7 +191,6 @@ Each run will require the following :
   - If the machine did not reboot automatically :
     - Is the HYDRA-DC Domain Controller running and logged into as Administrator?
     - Are all vms on NAT(vmware) or NatNetwork(virtualbox) Per course instruction?
-    - Double check that you are using the correct username and password for Administrator on Hydra-DC to join the domain
-    - Try again with correct logon credentials 
+    - Double check your network setup in the hypervisor and re-run the script if it fails 
 
  
