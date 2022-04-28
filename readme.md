@@ -59,6 +59,8 @@ Requirements :
       - powershell -version 2 -ep bypass 
       - Import-module $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit\Recon
       - Get-Net* commands should now work
+    
+    - Minor code cleanup
   
 # Revision 1.0.1a
   - Added OS Version to on screen display above the menu 
