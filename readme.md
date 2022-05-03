@@ -29,16 +29,17 @@ Requirements :
   - uCald4aMarine Release Candidate Testing
 
 # Revision 1.0.3 
-  Domain Controller Updates : 
-  
+  - Any and all Windows Updates will be removed automatically on 
+    - Domain controller Hydra-DC
+    - Workstataions : Punisher & Spiderman
+
+  Domain Controller Updates :   
   - Added autoconfiguration of DC to static ip instead of dhcp
     - ip will always be x.x.x.250
     - Default gateway automatically set to x.x.x.1 for the same network ip range  
     - Subnet set to 24 masked bits 255.255.255.0
     - temoprary dns of 8.8.8.8 set for installation until after ADCS is installed
     - after adcs is instaleld dns is set to 127.0.0.1
-
-  - Any and all updates to Windows will be removed automatically
 
   Workstations Updates (Punisher & Spiderman)
   - Added autoconfiguration of Punisher to static ip instead of dhcp 
