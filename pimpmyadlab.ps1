@@ -5,7 +5,7 @@
 # https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 #
 # Scripted By: Dewalt         
-# Revision 1.0.3 - see readme.md for revision notes   
+# Revision 1.0.4 - see readme.md for revision notes   
 #    
 # Special Thanks to :
 #  ToddAtLarge (PNPT Certified) for the NukeDefender script 
@@ -19,6 +19,7 @@
 #  DNS On the DC is set to 127.0.0.1
 #  DNS On Workstations is set to DC's ip of x.x.x.250 
 #
+# 
 
 # ---- begin nuke defender function
 function nukedefender { 
@@ -26,6 +27,26 @@ function nukedefender {
 
   # disable uac, firewall, defender
   write-host("`n  [++] Nuking Defender")
+
+  Set-MpPreference -DisableRealtimeMonitoring $true | Out-Null
+  Set-MpPreference -DisableRemovableDriveScanning $true | Out-Null
+  Set-MpPreference -DisableArchiveScanning  $true | Out-Null
+  Set-MpPreference -DisableAutoExclusions  $true | Out-Null
+  Set-MpPreference -DisableBehaviorMonitoring  $true | Out-Null
+  Set-MpPreference -DisableBlockAtFirstSeen $true | Out-Null
+  Set-MpPreference -DisableCatchupFullScan  $true | Out-Null
+  Set-MpPreference -DisableCatchupQuickScan $true | Out-Null
+  Set-MpPreference -DisableEmailScanning $true | Out-Null
+  Set-MpPreference -DisableIntrusionPreventionSystem  $true | Out-Null
+  Set-MpPreference -DisableIOAVProtection  $true | Out-Null
+  Set-MpPreference -DisablePrivacyMode  $true | Out-Null
+  Set-MpPreference -DisableRealtimeMonitoring  $true | Out-Null
+  Set-MpPreference -DisableRemovableDriveScanning  $true | Out-Null
+  Set-MpPreference -DisableRestorePoint  $true | Out-Null
+  Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan  $true | Out-Null
+  Set-MpPreference -DisableScanningNetworkFiles  $true | Out-Null
+  Set-MpPreference -DisableScriptScanning $true | Out-Null
+
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /f /v EnableLUA /t REG_DWORD /d 0 > $null
   reg add "HKLM\System\CurrentControlSet\Services\SecurityHealthService" /v "Start" /t REG_DWORD /d "4" /f > $null
 
@@ -47,7 +68,7 @@ function nukedefender {
   reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SubmitSamplesConsent" /t REG_DWORD /d "2" /f > $null
   reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v "Start" /t REG_DWORD /d "0" /f > $null
   reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" /v "Start" /t REG_DWORD /d "0" /f > $null
-  
+    
   # disable services 
   write-host("`n  [++] Nuking Defender Related Services")
   schtasks /Change /TN "Microsoft\Windows\ExploitGuard\ExploitGuard MDM policy Refresh" /Disable > $null
@@ -273,6 +294,109 @@ function create_labcontent {
   }
   # ---- end create_labcontent function
 
+# have a think on this one 
+# function check_for_gpo_disable_defender {
+#  $DisableDefenderExists=Get-GPO -Name "Disable Defender"
+#
+#  if ($DisableDefenderExists -ne $NULL)
+#  { Get-GPO -Name "Disable Defender" | Remove-GPLink -target "DC=Marvel,DC=local" | Remove-GPO -Name "Disable Defender" | Out-Null
+#    New-GPO -Name "Disable Defender" }
+# else { New-GPO -Name "Disable Defender" } 
+#}
+
+# ---- begin create_marvel_gpo
+function create_marvel_gpo {
+  
+  write-host("`n  [++] Removing Disable Defender Policy and Unlinking from Domain")
+  Get-GPO -Name "Disable Defender" | Remove-GPLink -target "DC=Marvel,DC=local" | Remove-GPO -Name "Disable Defender" > $null 
+ 
+  write-host("`n  [++] Creating new Disable Defender Group Policy Object")
+  New-GPO -Name "Disable Defender"
+
+  #reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /f /v EnableLUA /t REG_DWORD /d 0 > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -ValueName "EnableLUA" -Value 0 -Type Dword | Out-Null
+
+  #Set-GPRegistryValue -Name "LAPS_IT" -Key "HKLM\Software\Policies\Microsoft Services\AdmPwd" -ValueName 'AdmPwdEnabled' -Value 1 -Type Dword
+  #reg add "HKLM\System\CurrentControlSet\Services\SecurityHealthService" /v "Start" /t REG_DWORD /d "4" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\System\CurrentControlSet\Services\SecurityHealthService" -ValueName "Start" -Value 4 -Type Dword | Out-Null
+  # remove defender reg hive if it exists
+  # reg delete "HKLM\Software\Policies\Microsoft\Windows Defender" /f > $null
+  
+  # defender av go bye bye domain group policy! 
+  # reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /t REG_DWORD /d "1" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender" -ValueName "DisableAntiSpyware" -Value 1 -Type Dword | Out-Null
+
+  #reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiVirus" /t REG_DWORD /d "1" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender" -ValueName "DisableAntiVirus" -Value 1 -Type Dword | Out-Null
+
+  #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\MpEngine" /v "MpEnablePus" /t REG_DWORD /d "0" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\MpEngine" -ValueName "MpEnablePus" -Value 0 -Type Dword | Out-Null
+
+  #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableBehaviorMonitoring" /t REG_DWORD /d "1" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" -ValueName "DisableBehaviorMonitoring" -Value 1 -Type Dword | Out-Null
+
+  #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableIOAVProtection" /t REG_DWORD /d "1" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" -ValueName "DisableIOAVProtection" -Value 1 -Type Dword | Out-Null
+  
+  #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableOnAccessProtection" /t REG_DWORD /d "1" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" -ValueName "DisableOnAccessProtection" -Value 1 -Type Dword | Out-Null
+
+  #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableRealtimeMonitoring" /t REG_DWORD /d "1" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" -ValueName "DisableRealtimeMonitoring" -Value 1 -Type Dword | Out-Null
+ 
+  #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableScanOnRealtimeEnable" /t REG_DWORD /d "1" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" -ValueName "DisableScanOnRealtimeEnable" -Value 1 -Type Dword | Out-Null
+
+  #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Reporting" /v "DisableEnhancedNotifications" /t REG_DWORD /d "1" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\Reporting" -ValueName "DisableEnhancedNotifications" -Value 1 -Type Dword | Out-Null
+
+  #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "DisableBlockAtFirstSeen" /t REG_DWORD /d "1" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" -ValueName "DisableBlockAtFirstSeen" -Value 1 -Type Dword | Out-Null
+ 
+  #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SpynetReporting" /t REG_DWORD /d "0" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" -ValueName "SpynetReporting" -Value 0 -Type Dword | Out-Null
+
+  #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SubmitSamplesConsent" /t REG_DWORD /d "2" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" -ValueName "SubmitSamplesConsent" -Value 2 -Type Dword | Out-Null
+  
+  #reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v "Start" /t REG_DWORD /d "0" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" -ValueName "Start" -Value 0 -Type Dword | Out-Null 
+
+  #reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" /v "Start" /t REG_DWORD /d "0" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" -ValueName "Start" -Value 0 -Type Dword | Out-Null 
+ 
+    # smb signing is enabled but not required (breakout into individual fix function)
+  #reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v "RequireSecuritySignature" /t REG_DWORD /d "0" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" -ValueName "RequireSecuritySignature" -Value 0 -Type Dword | Out-Null
+
+  # reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v "requiresecuritysignature" /t REG_DWORD /d "0" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -ValueName "requiresecuritysignature" -Value 0 -Type Dword | Out-Null
+ 
+  # printer-nightmare registry keys (breakout into individual fix function)
+  # write-host("`n  [++] Setting Registry Keys for PrinterNightmare")
+  #reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint" /v "NoWarningNoElevationOnInstall" /t REG_DWORD /d "1" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint" -ValueName "NoWarningNoElevationOnInstall" -Value 1 -Type Dword | Out-Null
+
+  #reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint" /v "RestrictDriverInstallationToAdministrators" /t REG_DWORD /d "0" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint" -ValueName "RestrictDriverInstallationToAdministrators" -Value 0 -Type Dword | Out-Null
+
+  # set localaccounttokenfilterpolicy
+  # reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system" /v "LocalAccountTokenFilterPolicy" /t REG_DWORD /d "1" /f
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system" -ValueName "LocalAccountTokenFilterPolicy" -Value 1 -Type Dword | Out-Null
+
+  # set alwaysinstallelevated 
+  # reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer" -v "AlwaysInstallElevated" /t REG_DWORD /d "1" /f > $null 
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer" -ValueName "AlwaysInstallElevated" -Value 1 -Type Dword | Out-Null
+
+  #write-host("`n  [++] Nuking Windows Update")
+  reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d "1" /f > $null
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -ValueName "NoAutoUpdate" -Value 1 -Type Dword | Out-Null
+
+  write-host("`n  [++] New Disable Defender GPO Created, Linked and Enforced")
+  Get-GPO -Name "Disable Defender" | New-GPLink -target "DC=Marvel,DC=local" -LinkEnabled Yes
+  }
+  # ---- end create_marvel_gpo
+
 # ---- begin set_dcstaticip function  
 function set_dcstaticip { 
   # get the ip address
@@ -482,6 +606,7 @@ function server_build {
       elseif ($domain -eq "MARVEL.LOCAL" -And $machine -eq "HYDRA-DC") {
         write-host("`n Computer name and Domain are correct : Executing CreateContent Function ")
         create_labcontent
+        create_marvel_gpo
         write-host("`n Script Run 3 of 3 - We are all done! Rebooting one last time! o7 Happy Hacking! ")
         $dcip=Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress
         write-host("`n`n Write this down! We need this in the Workstation Configruation... Domain Controller IP Address: $dcip `n`n")
@@ -519,6 +644,7 @@ function setup_git {
   
   # install  
   write-host("`n  [++] Installing $($release.name)")
+  Unblock-File -Path C:.\$($release.name)
   Start-Process .\$($release.name) -argumentlist "/silent /supressmsgboxes" -Wait  | Out-Null 
   rm .\$($release.name)  
   
@@ -641,21 +767,25 @@ function menu {
     Write-host "`t(must be run 2 times)`n"
     Write-Host "`tPress 'S' to setup Spiderman Workstation and join the domain Marvel.local" 
     Write-host "`t(must be run 2 times)`n"
-    Write-host "`tPress 'N' to only run the NukeDefender Function`n"
-    Write-Host "`tPress 'X' to Exit"
-    $choice = Read-Host "`n`tEnter Choice" } until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'X'))
+    Write-host "`n`t --- Independant Standalone Functions ---"
+    Write-host "`n`tPress 'N' to only run the NukeDefender Function"
+    Write-host "`n`tPress 'F' to Fix Disable Defender GPO Policy"
+    Write-Host "`n`tPress 'X' to Exit"
+    $choice = Read-Host "`n`tEnter Choice" } until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'F') -or ($choice -eq 'X'))
 
   switch ($choice) {
-    'D'{  Write-Host "`n You have selected Hydra-DC domain controller"
+    'D'{  Write-Host "`n Running... Hydra-DC domain controller"
           nukedefender 
           server_build }
-    'P'{  Write-Host "`n You have selected Punisher Workstation"
+    'P'{  Write-Host "`n Running... Punisher Workstation"
           nukedefender 
           workstation_punisher }
-    'S'{  Write-Host "`n You have selected Spiderman Workstation"
+    'S'{  Write-Host "`n Running... Spiderman Workstation"
           nukedefender 
           workstation_spiderman }
-    'N'{  Write-Host "`n You have selected to only run the NukeDefender function"
+    'F'{  Write-Host "`n ONLY Running... Fix My Disable Defender GPO function and exiting" 
+          create_marvel_gpo }          
+    'N'{  Write-Host "`n ONLY Running... the NukeDefender function and exiting"
           nukedefender }
     'X'{Return}
     }

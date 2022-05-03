@@ -28,6 +28,14 @@ Requirements :
   - Yaseen (PNPT Certified) for Alpha/Beta Testing!
   - uCald4aMarine Release Candidate Testing
 
+# Revision 1.0.4 
+  - Disable Defender Group Policy Object is now being created with all options 
+    from NukeDefender and all options from the build_lab function 
+    - removes any existing "Disable Defender" Policy linked to the Marvel.local domain
+    - creates a new "Disable Defender" Policy
+    - sets all settings
+    - Links GPO Policy to Marvel.local domain and Enforces policy
+      
 # Revision 1.0.3 
   - Any and all Windows Updates will be removed automatically on 
     - Domain controller Hydra-DC
