@@ -38,7 +38,7 @@ Requirements :
     - ip will always be x.x.x.250
     - Default gateway automatically set to x.x.x.1 for the same network ip range  
     - Subnet set to 24 masked bits 255.255.255.0
-    - temoprary dns of 8.8.8.8 set for installation until after ADCS is installed
+    - temporary dns of 8.8.8.8 set for installation until after ADCS is installed
     - after adcs is installed dns is set to 127.0.0.1
 
   Workstations Updates (Punisher & Spiderman)
