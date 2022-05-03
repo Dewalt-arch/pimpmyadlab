@@ -104,8 +104,11 @@ Each run will require the following :
  
    wget https://raw.githubusercontent.com/Dewalt-arch/pimpmyadlab/main/pimpmyadlab.ps1 -O pimpmyadlab.ps1
 
+   Once the script has been copied or downloaded to the vm this step is now not required
+
 - cd \to\where\you\saved\the\script 
 - .\pimpmyadlab.ps1
+
 - You will be presented with a menu
 
  Lab build is 3 vms :
