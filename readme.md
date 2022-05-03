@@ -46,7 +46,7 @@ Requirements :
     - Punisher  IP address will always be x.x.x.220
     - Spiderman IP address will always be x.x.x.221 
     - Default Gateway automatically set to x.x.x.1 for the same network ip range 
-    - Subent set to 24 masked bits 255.255.255.0
+    - Subnet set to 24 masked bits 255.255.255.0
     - temporary dns of 8.8.8.8 set for installation until final configuration (run 2)
     - after run 2 of the script dns is set to HYDRA-DC's Ip address 
 
