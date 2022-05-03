@@ -130,7 +130,7 @@ Each run will require the following :
 - Domain Controller only (Windows 2019 Server)
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
-    - Instructions on how to wget the file directly to the vm are located above
+    - Instructions on how to wget the script directly to the vm are located above
   
   - Select Menu Option **D** 
   - Script must be run ***3 times*** in order to fully complete Domain Contoller installation and configuration
@@ -152,7 +152,7 @@ Each run will require the following :
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm
-    - Instrcutions on how to wget the file directly to the are is located above
+    - Instrcutions on how to wget the script directly to the are is located above
 
   - Select Menu Option **P** 
     - Script must be run ***2 times*** to fully complete Workstation installation and configuation
@@ -182,7 +182,7 @@ Each run will require the following :
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm
-    - Instrcutions on how to wget the file directly to the vm are located above
+    - Instrcutions on how to wget the script directly to the vm are located above
 
   - Select Menu Option **S**
     - Script must be run 2 times to fully complete Workstation installation and configuation
