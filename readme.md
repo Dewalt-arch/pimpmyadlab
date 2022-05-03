@@ -95,8 +95,9 @@ Requirements :
  - Install the Hypervisor GuestOS-Additions/Tools
  - Reboot the vm
  - Copy pimpmyadlab.ps1 to the vm
-   - or simply wget https://raw.githubusercontent.com/Dewalt-arch/pimpmyadlab/main/pimpmyadlab.ps1 -O pimpmyadlab.ps1
-     to directly download the script from github -> that machine
+   or 
+   ```wget https://raw.githubusercontent.com/Dewalt-arch/pimpmyadlab/main/pimpmyadlab.ps1 -O pimpmyadlab.ps1```
+   to directly download the script from github -> that machine
   
 Each run will require the following :
 - start / run / cmd (as administrator)
