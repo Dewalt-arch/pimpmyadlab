@@ -96,7 +96,7 @@ Requirements :
  - Reboot the vm
  - Copy pimpmyadlab.ps1 to the vm or wget the file directly to that machine:
    
-   wget https://raw.githubusercontent.com/Dewalt-arch/pimpmyadlab/main/pimpmyadlab.ps1 -O pimpmyadlab.ps1
+   `wget https://raw.githubusercontent.com/Dewalt-arch/pimpmyadlab/main/pimpmyadlab.ps1 -O pimpmyadlab.ps1`
    
   
 Each run will require the following :
