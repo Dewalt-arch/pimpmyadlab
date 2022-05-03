@@ -33,23 +33,19 @@ Requirements :
   
   - Added autoconfiguration of DC to static ip instead of dhcp
     - ip will always be x.x.x.250
-  
-  - Default gateway automatically set to x.x.x.1 for the same network ip range  
-  
-  - Subnet set to 24 masked bits 255.255.255.0
+    - Default gateway automatically set to x.x.x.1 for the same network ip range  
+    - Subnet set to 24 masked bits 255.255.255.0
     - temoprary dns of 8.8.8.8 set for installation until after ADCS is installed
     - after adcs is instaleld dns is set to 127.0.0.1
 
   - Any and all updates to Windows will be removed automatically
 
-  
-
   Workstations Updates (Punisher & Spiderman)
   - Added autoconfiguration of Punisher to static ip instead of dhcp 
     - Punisher  IP address will always be x.x.x.220
     - Spiderman IP address will always be x.x.x.221 
-  - Default Gateway automatically set to x.x.x.1 for the same network ip range 
-  - Subsent set to 24 masked bits 255.255.255.0
+    - Default Gateway automatically set to x.x.x.1 for the same network ip range 
+    - Subsent set to 24 masked bits 255.255.255.0
     - temporary dns of 8.8.8.8 set for installation until final configuration (run 2)
     - after run 2 of the script dns is set to HYDRA-DC's Ip address 
 
