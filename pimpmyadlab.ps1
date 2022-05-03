@@ -19,7 +19,7 @@
 #  DNS On the DC is set to 127.0.0.1
 #  DNS On Workstations is set to DC's ip of x.x.x.250
 #
-# 
+
 
 # -- being set_mppref function
 function set_mppref {
