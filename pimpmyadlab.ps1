@@ -619,7 +619,7 @@ function server_build {
         Read-Host -Prompt "`n`n Press ENTER to continue..."
         Restart-Computer
         }
-      else {
+      else { 
         write-host("Giving UP! There is nothing to do!") }
       }
       # ---- end server_build function

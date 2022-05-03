@@ -26,7 +26,7 @@ Requirements :
 # Special Thanks to :
   - ToddAtLarge (PNPT Certified) for the NukeDefender script 
   - Yaseen (PNPT Certified) for Alpha/Beta Testing!
-  - uCald4aMarine Release Candidate Testing
+  - uCald4aMarine Release Candidate Testing 
 
 # Revision 1.0.4 
   - Disable Defender Group Policy Object is now created with all options 
