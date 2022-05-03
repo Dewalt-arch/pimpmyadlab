@@ -17,7 +17,7 @@
 #  Punsiher will always have ip x.x.x.220 
 #  Spirderman will always have ip x.x.x.221
 #  DNS On the DC is set to 127.0.0.1
-#  DNS On Workstations is set to DC's ip of x.x.x.250 
+#  DNS On Workstations is set to DC's ip of x.x.x.250
 #
 # 
 

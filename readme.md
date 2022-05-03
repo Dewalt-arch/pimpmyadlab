@@ -29,7 +29,7 @@ Requirements :
   - uCald4aMarine Release Candidate Testing
 
 # Revision 1.0.4 
-  - Disable Defender Group Policy Object is now being created with all options 
+  - Disable Defender Group Policy Object is now created with all options 
     from NukeDefender and all options from the build_lab function 
     - removes any existing "Disable Defender" Policy linked to the Marvel.local domain
     - creates a new "Disable Defender" Policy
