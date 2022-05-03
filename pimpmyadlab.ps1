@@ -21,13 +21,9 @@
 #
 # 
 
-# ---- begin nuke defender function
-function nukedefender { 
-  $ErrorActionPreference = "SilentlyContinue"
-
-  # disable uac, firewall, defender
-  write-host("`n  [++] Nuking Defender")
-
+# -- being set_mppref function
+function set_mppref {
+  # moved to its own function so it is only called once at the begining of each machine build
   Set-MpPreference -DisableRealtimeMonitoring $true | Out-Null
   Set-MpPreference -DisableRemovableDriveScanning $true | Out-Null
   Set-MpPreference -DisableArchiveScanning  $true | Out-Null
@@ -46,6 +42,15 @@ function nukedefender {
   Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan  $true | Out-Null
   Set-MpPreference -DisableScanningNetworkFiles  $true | Out-Null
   Set-MpPreference -DisableScriptScanning $true | Out-Null
+  }
+  # -- being set_mppref function
+
+# ---- begin nuke defender function
+function nukedefender { 
+  $ErrorActionPreference = "SilentlyContinue"
+
+  # disable uac, firewall, defender
+  write-host("`n  [++] Nuking Defender")
 
   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /f /v EnableLUA /t REG_DWORD /d 0 > $null
   reg add "HKLM\System\CurrentControlSet\Services\SecurityHealthService" /v "Start" /t REG_DWORD /d "4" /f > $null
@@ -592,6 +597,7 @@ function server_build {
       write-host("`n  - Script Run 1 of 3 - Setting the computer name to HYDRA-DC and rebooting")
       write-host("`n  AFTER The reboot run the script again! to setup the domain controller!")
       Read-Host -Prompt "`n Press ENTER to continue..."
+      set_mppref  # one time run of this function on the dc build 
       set_dcstaticip
       Rename-Computer -NewName "HYDRA-DC" -Restart
       }
@@ -723,6 +729,7 @@ function workstation_punisher {
     write-host ("`n Setting the name of this machine to PUNISHER and rebooting automatically...")
     write-host (" Run this script 1 more time and select 'P' in the menu to join the domain")
     Read-Host -Prompt "`n Press ENTER to continue..."
+    set_mppref
     set_punisher_staticip 
     Rename-Computer -NewName "PUNISHER" -Restart
     }
@@ -746,6 +753,8 @@ function workstation_spiderman {
     write-host (" Run this script 1 more time and select 'S' in the menu to join the domain")
     Read-Host -Prompt "`n Press ENTER to continue..."
     # set_spiderman_staticip
+    set_mppref
+    set_spiderman_staticip
     Rename-Computer -NewName "SPIDERMAN" -Restart
     }
     elseif ($machine -eq "SPIDERMAN") {
