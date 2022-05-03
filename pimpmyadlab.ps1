@@ -5,14 +5,20 @@
 # https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 #
 # Scripted By: Dewalt         
-# Revision 1.0.2  
+# Revision 1.0.3 - see readme.md for revision notes   
 #    
 # Special Thanks to :
 #  ToddAtLarge (PNPT Certified) for the NukeDefender script 
 #  Yaseen (PNPT Certified) for Alpha/Beta Testing!
 #  uCald4aMarine Release Candidate Testing
-
-# global variables 
+# 
+#  -- Autoconfigured IP Addresses --
+#  DC will always have ip x.x.x.250
+#  Punsiher will always have ip x.x.x.220 
+#  Spirderman will always have ip x.x.x.221
+#  DNS On the DC is set to 127.0.0.1
+#  DNS On Workstations is set to DC's ip of x.x.x.250 
+#
 
 # ---- begin nuke defender function
 function nukedefender { 
@@ -74,11 +80,23 @@ function nukedefender {
   }
   # ---- end nukedefender
 
+# ---- begin remove_all_updates  
+function remove_all_updates {
+  Get-WmiObject -query "Select HotFixID  from Win32_QuickFixengineering" | sort-object -Descending -Property HotFixID|%{
+    $sUpdate=$_.HotFixID.Replace("KB","")
+    write-host ("Uninstalling update "+$sUpdate);
+    & wusa.exe /uninstall /KB:$sUpdate /quiet /norestart;
+    Wait-Process wusa
+        Start-Sleep -s 1 }
+  }
+  # ---- end remove_all_updates 
+
 # ---- begin build_lab function 
 function build_lab {
   $ErrorActionPreference = "SilentlyContinue"
   write-host("`n  When prompted you are being logged out simply click the Close button")
-  
+  remove_all_updates 
+
   # disable server manager from launch at startup
   write-host("`n  [++] Disabling Server Manager from launching on startup ")
   Get-ScheduledTask -TaskName ServerManager | Disable-ScheduledTask | Out-Null
@@ -255,8 +273,192 @@ function create_labcontent {
   }
   # ---- end create_labcontent function
 
+# ---- begin set_dcstaticip function  
+function set_dcstaticip { 
+  # get the ip address
+  $IPAddress=Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress
+  
+  # get the adapetr name
+  $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
+  
+  # split the ip address up based on the . 
+  $IPByte = $IPAddress.Split(".")
+  
+  # first 3 octets not intrested in, only the last octet set to .250 (ip address)
+  $StaticIP = ($IPByte[0]+"."+$IPByte[1]+"."+$IPByte[2]+".250") 
+
+  # first 3 octets not intrested in, onlly the last octet set to .1 (default gateway)
+  $StaticGateway = ($IPByte[0]+"."+$IPByte[1]+"."+$IPByte[2]+".1") 
+
+  # static mask of 24 bits or 255.255.255.0
+  $StaticMask = 24 
+
+  # ipv4
+  $IpType = "IPv4"
+  
+  # ip address parameteres list
+  $ipParams = @{
+  InterfaceAlias = "$adapter"
+  IPAddress = "$StaticIP"
+  PrefixLength = $StaticMask
+  DefaultGateway = "$StaticGateway"
+  AddressFamily = "IPv4"
+  }
+  
+  # dns parameters list 
+  $dnsParams = @{
+  InterfaceAlias = "$adapter"
+  ServerAddresses = ("8.8.8.8")
+  }
+  
+  # write to screen what were doing 
+  write-host "$StaticIP / $StaticGateway"
+  
+  $upadapter = Get-NetAdapter | ? {$_.Status -eq "up"}
+  
+  # remove config if any 
+  If (($upadapter | Get-NetIPConfiguration).IPv4Address.IPAddress) {$upadapter | Remove-NetIPAddress -AddressFamily $IPType -Confirm:$false}
+  If (($upadapter | Get-NetIPConfiguration).Ipv4DefaultGateway) {$upadapter | Remove-NetRoute -AddressFamily $IPType -Confirm:$false}
+  
+  # make sure its not set for dhcp anymore
+  Set-NetIPInterface -InterfaceAlias "$adapter" -Dhcp Disabled
+  
+  # set the new ip address to .250 and the default gateway to .1  subnet = 255.255.255.0
+  New-NetIPAddress @ipParams
+
+  # set the dns based on parameters
+  Set-DnsClientServerAddress @dnsParams
+  
+  # restart the network adapter
+  Restart-NetAdapter "$adapter"
+  }
+  # ---- end set_dcstaticip function  
+
+# ---- begin set_punisher_staticip function  
+function set_punisher_staticip { 
+  # get the ip address
+  $IPAddress=Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress
+  
+  # get the adapetr name
+  $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
+   
+  # split the ip address up based on the . 
+  $IPByte = $IPAddress.Split(".")
+   
+  # first 3 octets not intrested in, only the last octet set to .250 (ip address)
+  $StaticIP = ($IPByte[0]+"."+$IPByte[1]+"."+$IPByte[2]+".220") 
+ 
+  # first 3 octets not intrested in, onlly the last octet set to .1 (default gateway)
+  $StaticGateway = ($IPByte[0]+"."+$IPByte[1]+"."+$IPByte[2]+".1") 
+ 
+  # static mask of 24 bits or 255.255.255.0
+  $StaticMask = 24 
+ 
+  # ipv4
+  $IpType = "IPv4"
+   
+  # ip address parameteres list
+  $ipParams = @{
+  InterfaceAlias = "$adapter"
+  IPAddress = "$StaticIP"
+  PrefixLength = $StaticMask
+  DefaultGateway = "$StaticGateway"
+  AddressFamily = "IPv4"
+  }
+   
+  # dns parameters list 
+  $dnsParams = @{
+  InterfaceAlias = "$adapter"
+  ServerAddresses = ("8.8.8.8")
+  }
+   
+  # write to screen what were doing 
+  write-host "$StaticIP / $StaticGateway"
+   
+  $upadapter = Get-NetAdapter | ? {$_.Status -eq "up"}
+   
+  # remove config if any 
+  If (($upadapter | Get-NetIPConfiguration).IPv4Address.IPAddress) {$upadapter | Remove-NetIPAddress -AddressFamily $IPType -Confirm:$false}
+  If (($upadapter | Get-NetIPConfiguration).Ipv4DefaultGateway) {$upadapter | Remove-NetRoute -AddressFamily $IPType -Confirm:$false}
+   
+  # make sure its not set for dhcp anymore
+  Set-NetIPInterface -InterfaceAlias "$adapter" -Dhcp Disabled
+   
+  # set the new ip address to .250 and the default gateway to .1  subnet = 255.255.255.0
+  New-NetIPAddress @ipParams
+ 
+  # set the dns based on parameters
+  Set-DnsClientServerAddress @dnsParams
+   
+  # restart the network adapter
+  Restart-NetAdapter "$adapter"
+  }
+  # ---- end set_punisher_staticip function  
+
+# ---- begin set_spiderman_staticip function  
+function set_spiderman_staticip { 
+  # get the ip address
+  $IPAddress=Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress
+  
+  # get the adapetr name
+  $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
+  
+  # split the ip address up based on the . 
+  $IPByte = $IPAddress.Split(".")
+  
+  # first 3 octets not intrested in, only the last octet set to .250 (ip address)
+  $StaticIP = ($IPByte[0]+"."+$IPByte[1]+"."+$IPByte[2]+".221") 
+
+  # first 3 octets not intrested in, onlly the last octet set to .1 (default gateway)
+  $StaticGateway = ($IPByte[0]+"."+$IPByte[1]+"."+$IPByte[2]+".1") 
+
+  # static mask of 24 bits or 255.255.255.0
+  $StaticMask = 24 
+
+  # ipv4
+  $IpType = "IPv4"
+  
+  # ip address parameteres list
+  $ipParams = @{
+  InterfaceAlias = "$adapter"
+  IPAddress = "$StaticIP"
+  PrefixLength = $StaticMask
+  DefaultGateway = "$StaticGateway"
+  AddressFamily = "IPv4"
+  }
+  
+  # dns parameters list 
+  $dnsParams = @{
+  InterfaceAlias = "$adapter"
+  ServerAddresses = ("8.8.8.8")
+  }
+  
+  # write to screen what were doing 
+  write-host "$StaticIP / $StaticGateway"
+  
+  $upadapter = Get-NetAdapter | ? {$_.Status -eq "up"}
+  
+  # remove config if any 
+  If (($upadapter | Get-NetIPConfiguration).IPv4Address.IPAddress) {$upadapter | Remove-NetIPAddress -AddressFamily $IPType -Confirm:$false}
+  If (($upadapter | Get-NetIPConfiguration).Ipv4DefaultGateway) {$upadapter | Remove-NetRoute -AddressFamily $IPType -Confirm:$false}
+  
+  # make sure its not set for dhcp anymore
+  Set-NetIPInterface -InterfaceAlias "$adapter" -Dhcp Disabled
+  
+  # set the new ip address to .250 and the default gateway to .1  subnet = 255.255.255.0
+  New-NetIPAddress @ipParams
+
+  # set the dns based on parameters
+  Set-DnsClientServerAddress @dnsParams
+  
+  # restart the network adapter
+  Restart-NetAdapter "$adapter"
+  }  
+  # ---- end set_spiderman_staticip function
+
 # ---- begin server_build function
 function server_build {
+  Get-ScheduledTask -TaskName ServerManager | Disable-ScheduledTask | Out-Null
   write-host("`n`n   Computer Name : $machine")
   write-host("     Domain Name : $domain")
   write-host("      OS Version : $osversion")
@@ -266,6 +468,7 @@ function server_build {
       write-host("`n  - Script Run 1 of 3 - Setting the computer name to HYDRA-DC and rebooting")
       write-host("`n  AFTER The reboot run the script again! to setup the domain controller!")
       Read-Host -Prompt "`n Press ENTER to continue..."
+      set_dcstaticip
       Rename-Computer -NewName "HYDRA-DC" -Restart
       }
       elseif ($domain -ne "MARVEL.LOCAL") {
@@ -327,6 +530,9 @@ function setup_git {
 
 # ---- begin workstations_common function
 function workstations_common { 
+
+  # remove all updates 
+  remove_all_updates
 
   # download and install Git for Windows 
   setup_git 
@@ -391,6 +597,7 @@ function workstation_punisher {
     write-host ("`n Setting the name of this machine to PUNISHER and rebooting automatically...")
     write-host (" Run this script 1 more time and select 'P' in the menu to join the domain")
     Read-Host -Prompt "`n Press ENTER to continue..."
+    set_punisher_staticip 
     Rename-Computer -NewName "PUNISHER" -Restart
     }
     elseif ($machine -eq "PUNISHER") {
@@ -412,6 +619,7 @@ function workstation_spiderman {
     write-host ("`n Setting the name of this machine to SPIDERMAN and rebooting automatically...")
     write-host (" Run this script 1 more time and select 'S' in the menu to join the domain")
     Read-Host -Prompt "`n Press ENTER to continue..."
+    # set_spiderman_staticip
     Rename-Computer -NewName "SPIDERMAN" -Restart
     }
     elseif ($machine -eq "SPIDERMAN") {
