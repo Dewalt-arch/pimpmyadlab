@@ -127,26 +127,19 @@ Each run will require the following :
 - Domain Controller only (Windows 2019 Server)
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
-  - Copy script to the vm
+    - Instructions on how to wget the file directly to the vm are located above
   
-  - Execute the instructions below in the vm 
-    - start / run / cmd (as administrator)
-    - powershell -ep bypass
-    - cd \to\where\you\saved\the\script
-    - .\pimpmyadlab.ps1
-    - You will be presented with a menu
-  
-   - Select Menu Option **D** 
-   - Script must be run ***3 times*** in order to fully complete Domain Contoller installation and configuration
+  - Select Menu Option **D** 
+  - Script must be run ***3 times*** in order to fully complete Domain Contoller installation and configuration
    
-   - ***Run 1*** - Sets the name of the computer to Hydra-DC, reboots automatically when done
-     - After the reboot, Run script again, Select Menu Option D for Run #2 
+  - ***Run 1*** - Sets the name of the computer to Hydra-DC, reboots automatically when done
+    - After the reboot, Run script again, Select Menu Option D for Run #2 
    
-   - ***Run 2*** - Installs Domain Controller, Forest, etc, reboots automatically when done
-     - After the reboot, Run script again, Select Menu Option D for Run #3 
+  - ***Run 2*** - Installs Domain Controller, Forest, etc, reboots automatically when done
+    - After the reboot, Run script again, Select Menu Option D for Run #3 
    
-   - ***Run 3*** - Installs the contents for the Cert-Auth, Domain, Users, SetSPN, etc and various other things
-     - Final reboot of the system, domin controller is complete and ready for use! 
+  - ***Run 3*** - Installs the contents for the Cert-Auth, Domain, Users, SetSPN, etc and various other things
+    - Final reboot of the system, domin controller is complete and ready for use! 
 
 # Workstation #1 Instructions: 
  Punisher Workstation only (Windows 10 Enterprise Client Workstation)
@@ -156,16 +149,8 @@ Each run will require the following :
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm
-  
-   - (note: add section here on cloning workstaion #1 at this stage -> workstation #2)
+    - Instrcutions on how to wget the file directly to the are is located above
 
-  - Execute the instructions below in the vm 
-    - start / run / cmd (as administrator)
-    - powershell -ep bypass
-    - cd \to\where\you\saved\the\script
-    - .\pimpmyadlab.ps1
-    - You will be presented with a menu
-  
   - Select Menu Option **P** 
     - Script must be run ***2 times*** to fully complete Workstation installation and configuation
       
@@ -194,14 +179,8 @@ Each run will require the following :
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm
-  
-  - Execute the instructions below in the vm 
-    - start / run / cmd (as administrator)
-    - powershell -ep bypass
-    - cd \to\where\you\saved\the\script
-    - .\pimpmyadlab.ps1
-    - You will be presented with a menu
-  
+    - Instrcutions on how to wget the file directly to the vm are located above
+
   - Select Menu Option **S**
     - Script must be run 2 times to fully complete Workstation installation and configuation
       
