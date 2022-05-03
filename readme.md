@@ -98,12 +98,12 @@ Requirements :
    
   
 Each run will require the following :
+- start / run / cmd (as administrator)
+- powershell -ep bypass 
  - Copy pimpmyadlab.ps1 to the vm or wget the file directly to that machine:
  
    wget https://raw.githubusercontent.com/Dewalt-arch/pimpmyadlab/main/pimpmyadlab.ps1 -O pimpmyadlab.ps1
 
-- start / run / cmd (as administrator)
-- powershell -ep bypass 
 - cd \to\where\you\saved\the\script 
 - .\pimpmyadlab.ps1
 - You will be presented with a menu
