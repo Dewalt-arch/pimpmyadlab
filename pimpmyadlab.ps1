@@ -792,7 +792,7 @@ function menu {
     'S'{  Write-Host "`n Running... Spiderman Workstation"
           nukedefender 
           workstation_spiderman }
-    'F'{  Write-Host "`n ONLY Running... Fix My Disable Defender GPO function and exiting" 
+    'F'{  Write-Host "`n ONLY Running... Fix My Disable Defender GPO function and exit" 
           create_marvel_gpo }          
     'N'{  Write-Host "`n ONLY Running... the NukeDefender function and exiting"
           nukedefender }
