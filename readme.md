@@ -28,6 +28,10 @@ Requirements :
   - Yaseen (PNPT Certified) for Alpha/Beta Testing!
   - uCald4aMarine Release Candidate Testing 
 
+# Revision 1.0.5 
+  - SetSPN has been broken out into its own function and added as a 
+    menu item "Q" to only run the setspn delete and add 
+
 # Revision 1.0.4 
   - Disable Defender Group Policy Object is now created with all options 
     from NukeDefender and all options from the build_lab function 

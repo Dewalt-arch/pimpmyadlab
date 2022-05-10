@@ -128,6 +128,22 @@ function remove_all_updates {
   }
   # ---- end remove_all_updates 
 
+function fix_setspn {
+  write-host("`n  [++] Deleting Existing SPNs")
+  setspn -D SQLService/MARVEL.local HYDRA-DC > $null
+  setspn -D SQLService/Marvel.local MARVEL\SQLService > $null
+  setspn -D HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  setspn -D MARVEL/SQLService.Marvel.local:60111 MARVEL\SQLService > $null
+  setspn -D DomainController/SQLService.MARVEL.Local:60111 MARVEL\SQLService > $null
+  
+  # add the new spn
+  write-host("`n  [++] Adding SPNs")
+  setspn -A HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  setspn -A SQLService/MARVEL.local  MARVEL\SQLService > $null
+  setspn -A DomainController/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  }
+
+
 # ---- begin build_lab function 
 function build_lab {
   $ErrorActionPreference = "SilentlyContinue"
@@ -273,19 +289,9 @@ function create_labcontent {
   Write-Host "        Adding SQLService to Marvel.local Groups: Administrators, Domain Admins, Enterprise Admins, Group Policy Creator Owners, Schema Admins"
 
   # setspn for sqlservice user
-  # delete existing spns
-  write-host("`n  [++] Deleting Existing SPNs")
-  setspn -D SQLService/MARVEL.local HYDRA-DC > $null
-  setspn -D SQLService/Marvel.local MARVEL\SQLService > $null
-  setspn -D HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
-  setspn -D MARVEL/SQLService.Marvel.local:60111 MARVEL\SQLService > $null
-  setspn -D DomainController/SQLService.MARVEL.Local:60111 MARVEL\SQLService > $null
-
-  # add the new spn
-  write-host("`n  [++] Adding SPNs")
-  setspn -A HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
-  setspn -A SQLService/MARVEL.local  MARVEL\SQLService > $null
-  setspn -A DomainController/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  # this section of the script was moved to its own function to serve 2 purposes 
+  # 1 for the adlab build intitally and 2 as a support tool 
+  fix_setspn
 
   # check both local and domain spns (add additional if statements here)
   write-host("`n  [++] Checking Local Hydra-DC SPN")
@@ -824,6 +830,21 @@ function workstation_spiderman {
     } 
     # ---- end workstation_spiderman function
 
+function adcsca_fix {
+    write-host ("`n Removing ADCSCertificateAuthority")
+    # description : uninstall adcsca write to temp file that the system needs to be rebooted 
+    # prompt user to reboot by pressing enter and echo something new into that file to confirm it has been rebooted
+    # check file to confirm reboot
+    # install adcsca 
+    # Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" `
+    # -KeyLength 2048 -HashAlgorithmName SHA1 -ValidityPeriod Years -ValidityPeriodUnits 99 -NoConfirm -Force 
+
+    #Uninstall-AdcsCertificationAuthority -NoConfirm -Force 
+    #echo "adcs fix reboot" > C:\adcs.fix 
+
+
+}    
+
 # ---- begin menu function
 function menu {
   do {
@@ -837,8 +858,10 @@ function menu {
     Write-host "`n`t --- Independant Standalone Functions ---"
     Write-host "`n`tPress 'N' to only run the NukeDefender Function"
     Write-host "`n`tPress 'F' to Fix Disable Defender GPO Policy"
+    Write-Host "`n`tPress 'Q' to only run the SetSPN Function"
     Write-Host "`n`tPress 'X' to Exit"
-    $choice = Read-Host "`n`tEnter Choice" } until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'F') -or ($choice -eq 'X'))
+    $choice = Read-Host "`n`tEnter Choice" } until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') `
+              -or ($choice -eq 'F') -or ($choice -eq 'X') -or ($choice 'Q'))
 
   switch ($choice) {
     'D'{  Write-Host "`n Running... Hydra-DC domain controller"
@@ -854,6 +877,7 @@ function menu {
           create_marvel_gpo }          
     'N'{  Write-Host "`n ONLY Running... the NukeDefender function and exit"
           nukedefender }
+    'Q'{  Write-Host "`n ONLY running... Fix SetSPN Function and exit"}          
     'X'{Return}
     }
   }
