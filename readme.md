@@ -30,7 +30,9 @@ Requirements :
 
 # Revision 1.0.5 
   - SetSPN has been broken out into its own function and added as a 
-    menu item "Q" to only run the setspn delete and add 
+    menu item "Q" to only run this function and exit 
+  - ADCSCertificateAuthority has been broken out into its own function
+    and added as menu option A to only run this function and exit
 
 # Revision 1.0.4 
   - Disable Defender Group Policy Object is now created with all options 

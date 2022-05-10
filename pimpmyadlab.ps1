@@ -128,6 +128,7 @@ function remove_all_updates {
   }
   # ---- end remove_all_updates 
 
+# ---- begin fix_setspn function 
 function fix_setspn {
   write-host("`n  [++] Deleting Existing SPNs")
   setspn -D SQLService/MARVEL.local HYDRA-DC > $null
@@ -148,7 +149,20 @@ function fix_setspn {
   write-host("`n  [++] Checking MARVEL\SQLService SPN")
   setspn -L MARVEL\SQLService
   }
+  # ---- end fix_setspn function 
 
+# ---- begin fix_adcsca function 
+function fix_adcsca {
+  write-host ("`n  [++] Removing ADCSCertificateAuthority")
+  Install-AdcsCertificationAuthority -Force | Out-Null
+  write-host ("`n  [++] Installing new ADCSCertificateAuthority `n")
+  Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" `
+  -KeyLength 2048 -HashAlgorithmName SHA1 -ValidityPeriod Years -ValidityPeriodUnits 99 -WarningAction SilentlyContinue -Force | Out-Null 
+  #hold on this part may not be needed
+  #Read-Host -Prompt "`n Press ENTER to continue..."
+  #restart-computer 
+  }     
+  # ---- end fix_adcsca function  
 
 # ---- begin build_lab function 
 function build_lab {
@@ -205,8 +219,9 @@ function create_labcontent {
 
   # configure ad-certificate authority
   write-host("`n  [++] Configuring Active Directory Certificate Authority")
-  Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" `
-  -KeyLength 2048 -HashAlgorithmName SHA1 -ValidityPeriod Years -ValidityPeriodUnits 99 -WarningAction SilentlyContinue -Force | Out-Null
+  fix_adcsca
+  #Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" `
+  #-KeyLength 2048 -HashAlgorithmName SHA1 -ValidityPeriod Years -ValidityPeriodUnits 99 -WarningAction SilentlyContinue -Force | Out-Null
 
   # install remote system administration tools
   write-host("`n  [++] Installing Remote System Administration Tools (RSAT)")
@@ -830,21 +845,6 @@ function workstation_spiderman {
     } 
     # ---- end workstation_spiderman function
 
-function adcsca_fix {
-    write-host ("`n Removing ADCSCertificateAuthority")
-    # description : uninstall adcsca write to temp file that the system needs to be rebooted 
-    # prompt user to reboot by pressing enter and echo something new into that file to confirm it has been rebooted
-    # check file to confirm reboot
-    # install adcsca 
-    # Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" `
-    # -KeyLength 2048 -HashAlgorithmName SHA1 -ValidityPeriod Years -ValidityPeriodUnits 99 -NoConfirm -Force 
-
-    #Uninstall-AdcsCertificationAuthority -NoConfirm -Force 
-    #echo "adcs fix reboot" > C:\adcs.fix 
-
-
-}    
-
 # ---- begin menu function
 function menu {
   do {
@@ -859,9 +859,10 @@ function menu {
     Write-host "`n`tPress 'N' to only run the NukeDefender Function"
     Write-host "`n`tPress 'F' to Fix Disable Defender GPO Policy"
     Write-Host "`n`tPress 'K' to only run the SetSPN Function"
+    Write-Host "`n`tPress 'A' to only run the ADCSCertificateAuthority Function"
     Write-Host "`n`tPress 'X' to Exit"
     $choice = Read-Host "`n`tEnter Choice" } 
-    until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'F') -or ($choice -eq 'X') -or ($choice -eq 'Q'))
+    until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'F') -or ($choice -eq 'X') -or ($choice -eq 'Q') -or ($choice -eq 'A'))
     
   switch ($choice) {
     'D'{  Write-Host "`n Running... Hydra-DC domain controller"
@@ -878,7 +879,9 @@ function menu {
     'N'{  Write-Host "`n ONLY Running... the NukeDefender function and exit"
           nukedefender }
     'Q'{  Write-Host "`n ONLY running... Fix SetSPN Function and exit"
-          fix_setspn }          
+           fix_setspn }
+    'A'{  Write-Host "`n ONLY running... Fix ADCSCertificateAuthority Function and exit"
+           fix_adcsca }                     
     'X'{Return}
     }
   } 
