@@ -141,6 +141,12 @@ function fix_setspn {
   setspn -A HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
   setspn -A SQLService/MARVEL.local  MARVEL\SQLService > $null
   setspn -A DomainController/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+
+  # check both local and domain spns (add additional if statements here)
+  write-host("`n  [++] Checking Local Hydra-DC SPN")
+  setspn -L HYDRA-DC
+  write-host("`n  [++] Checking MARVEL\SQLService SPN")
+  setspn -L MARVEL\SQLService
   }
 
 
@@ -292,12 +298,6 @@ function create_labcontent {
   # this section of the script was moved to its own function to serve 2 purposes 
   # 1 for the adlab build intitally and 2 as a support tool 
   fix_setspn
-
-  # check both local and domain spns (add additional if statements here)
-  write-host("`n  [++] Checking Local Hydra-DC SPN")
-  setspn -L HYDRA-DC
-  write-host("`n  [++] Checking MARVEL\SQLService SPN")
-  setspn -L MARVEL\SQLService
 
   # create ou=groups, move all existing groups into ou=groups,dc=marvel,dc=local
   New-ADOrganizationalUnit -Name "Groups" -Path "DC=MARVEL,DC=LOCAL" -Description "Groups" | Out-Null
@@ -858,11 +858,11 @@ function menu {
     Write-host "`n`t --- Independant Standalone Functions ---"
     Write-host "`n`tPress 'N' to only run the NukeDefender Function"
     Write-host "`n`tPress 'F' to Fix Disable Defender GPO Policy"
-    Write-Host "`n`tPress 'Q' to only run the SetSPN Function"
+    Write-Host "`n`tPress 'K' to only run the SetSPN Function"
     Write-Host "`n`tPress 'X' to Exit"
-    $choice = Read-Host "`n`tEnter Choice" } until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') `
-              -or ($choice -eq 'F') -or ($choice -eq 'X') -or ($choice 'Q'))
-
+    $choice = Read-Host "`n`tEnter Choice" } 
+    until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'F') -or ($choice -eq 'X') -or ($choice -eq 'K'))
+    
   switch ($choice) {
     'D'{  Write-Host "`n Running... Hydra-DC domain controller"
           nukedefender 
@@ -877,10 +877,12 @@ function menu {
           create_marvel_gpo }          
     'N'{  Write-Host "`n ONLY Running... the NukeDefender function and exit"
           nukedefender }
-    'Q'{  Write-Host "`n ONLY running... Fix SetSPN Function and exit"}          
+    'K'{  Write-Host "`n ONLY running... Fix SetSPN Function and exit"
+          fix_setspn }          
     'X'{Return}
     }
   }
+
   # ---- begin menu function  
 
 # ---- being main
