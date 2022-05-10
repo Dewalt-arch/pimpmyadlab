@@ -38,7 +38,7 @@ Requirements :
     - removes any existing "Disable Defender" Policy linked to the Marvel.local domain
     - creates a new "Disable Defender" Policy
     - sets all settings
-    - Links GPO Policy to Marvel.local domain and Enforces policy
+    - Links GPO Policy to Marvel.local domain and Enforces policy 
       
 # Revision 1.0.3 
   - Any and all Windows Updates will be removed automatically on 

@@ -861,7 +861,7 @@ function menu {
     Write-Host "`n`tPress 'K' to only run the SetSPN Function"
     Write-Host "`n`tPress 'X' to Exit"
     $choice = Read-Host "`n`tEnter Choice" } 
-    until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'F') -or ($choice -eq 'X') -or ($choice -eq 'K'))
+    until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'F') -or ($choice -eq 'X') -or ($choice -eq 'Q'))
     
   switch ($choice) {
     'D'{  Write-Host "`n Running... Hydra-DC domain controller"
@@ -877,11 +877,11 @@ function menu {
           create_marvel_gpo }          
     'N'{  Write-Host "`n ONLY Running... the NukeDefender function and exit"
           nukedefender }
-    'K'{  Write-Host "`n ONLY running... Fix SetSPN Function and exit"
+    'Q'{  Write-Host "`n ONLY running... Fix SetSPN Function and exit"
           fix_setspn }          
     'X'{Return}
     }
-  }
+  } 
 
   # ---- begin menu function  
 

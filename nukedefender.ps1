@@ -1,4 +1,4 @@
-﻿#Requires -RunAsAdministrator
+﻿#Requires -RunAsAdministrator 
  
 # NukeDefender.ps1 
 # Function from PimpmyADLab.ps1 exported to a single script for those that 
