@@ -5,7 +5,7 @@
 # https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 #
 # Scripted By: Dewalt         
-# Revision 1.0.4 - see readme.md for revision notes   
+# Revision 1.0.6 - see readme.md for revision notes   
 #    
 # Special Thanks to :
 #  ToddAtLarge (PNPT Certified) for the NukeDefender script 
@@ -477,7 +477,7 @@ function create_marvel_gpo {
 
   # thats all folks!
   write-host("`n  [++] New Disable Defender GPO Created, Linked and Enforced `n")
-  Get-GPO -Name "Disable Defender" | New-GPLink -target "DC=Marvel,DC=local" -LinkEnabled Yes
+  Get-GPO -Name "Disable Defender" | New-GPLink -target "DC=MARVEL,DC=local" -LinkEnabled Yes -Enforced Yes
   }
   # ---- end create_marvel_gpo
 
@@ -749,6 +749,11 @@ function workstations_common {
   # download and install Git for Windows 
   setup_git 
   git_powersploit
+
+  # add something here to gitclone powershell and place it in C:\Users\$USERNAME\Documents\WindowsPowerShell\Modules on both workstations
+  # mkdir C:\Users\$($env:UserName)\Documents\WindowsPowerShell\Modules\Recon
+  # git clone https://github.com/PowerShellMafia/PowerSploit C:\tcm-academy\PowerShellMafia
+  # xcopy /s /e /y C:\tcm-academy\PowerShellMafia\Recon\  C:\Users\$($eng:Username)\Documents\WindowsPowerShell\Modules\Recon
   
   # install remote system administration tools
   write-host("`n  [++] Installing Remote System Administration Tools (RSAT)") 
@@ -888,7 +893,7 @@ function menu {
 
   # ---- begin menu function  
 
-# ---- being main
+# ---- begin main
   $ErrorActionPreference = "SilentlyContinue"
   clear 
   $currentname=$env:COMPUTERNAME

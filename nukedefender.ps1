@@ -11,7 +11,7 @@
 #  ToddAtLarge (PNPT Certified) for the NukeDefender script 
 # 
 
-# ---- BEGIN NUKE DEFENDER FUNCTION
+# ---- BEGIN NUKE DEFENDER FUNCTION 
 function nukedefender {
     $ErrorActionPreference = "SilentlyContinue"  
   

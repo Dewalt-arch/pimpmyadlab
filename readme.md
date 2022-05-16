@@ -28,6 +28,10 @@ Requirements :
   - Yaseen (PNPT Certified) for Alpha/Beta Testing!
   - uCald4aMarine Release Candidate Testing 
 
+# Revision 1.0.6 
+  - Correction to GPO Policy, was linked but not enforced 
+  - GPO Policy Disable Defender is now Enforced  
+
 # Revision 1.0.5 
   - SetSPN has been broken out into its own function and added as a 
     menu item "Q" to only run this function and exit 
