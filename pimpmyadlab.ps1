@@ -67,6 +67,7 @@ function nukedefender {
   reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableOnAccessProtection" /t REG_DWORD /d "1" /f > $null
   reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableRealtimeMonitoring" /t REG_DWORD /d "1" /f > $null
   reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableScanOnRealtimeEnable" /t REG_DWORD /d "1" /f > $null
+  reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableScriptScanning" /t REG_DWORD /d "1" /f > $null 
   reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Reporting" /v "DisableEnhancedNotifications" /t REG_DWORD /d "1" /f > $null
   reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "DisableBlockAtFirstSeen" /t REG_DWORD /d "1" /f > $null
   reg add "HKLM\Software\Policies\Microsoft\Windows Defender\SpyNet" /v "SpynetReporting" /t REG_DWORD /d "0" /f > $null
@@ -106,7 +107,7 @@ function nukedefender {
   
   # DARK MODE! 
   write-host("`n  [++] Quality of life improvement - Dark Theme")
-#  Set-ItemProperty -Path "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -Value 0 
+  # Set-ItemProperty -Path "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -Value 0 
   reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "AppsUseLightTheme" /t REG_DWORD /d "0" /f > $null
 
   # Disable screen locker, timeout
@@ -176,9 +177,6 @@ function build_lab {
 
   # download and install latest version of git from github
   setup_git
-
-  # git clone powersploit from powershellmafia
-  git_powersploit
 
   # install ad-domain-services
   write-host("`n  [++] Installing Module Active Directory Domain Services (ADDS)")
@@ -339,17 +337,8 @@ function create_labcontent {
   }
   # ---- end create_labcontent function
 
-# have a think on this one 
-# function check_for_gpo_disable_defender {
-#  $DisableDefenderExists=Get-GPO -Name "Disable Defender"
-#
-#  if ($DisableDefenderExists -ne $NULL)
-#  { Get-GPO -Name "Disable Defender" | Remove-GPLink -target "DC=Marvel,DC=local" | Remove-GPO -Name "Disable Defender" | Out-Null
-#    New-GPO -Name "Disable Defender" }
-# else { New-GPO -Name "Disable Defender" } 
-#}
 
-# ---- begin create_marvel_gpo
+  # ---- begin create_marvel_gpo
 function create_marvel_gpo {
   
   write-host("`n  [++] Removing Disable Defender Policy and Unlinking from Domain")
@@ -401,6 +390,10 @@ function create_marvel_gpo {
   write-host("`n  [++] Setting GPO Registry key: RTP DisableScanOnRealtimeEnable")
   #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableScanOnRealtimeEnable" /t REG_DWORD /d "1" /f > $null
   Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" -ValueName "DisableScanOnRealtimeEnable" -Value 1 -Type Dword | Out-Null
+
+  write-host("`n  [++] Setting GPO Registry key: RTP DisableScriptScanning")
+  #Set-MpPreference -DisableScriptScanning $true 
+  Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" -ValueName "DisableScriptScanning" -Value 1 -Type Dword | Out-Null
 
   write-host("`n  [++] Setting GPO Registry key: Defender Reporting DisableEnhancedNotifications")
   #reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Reporting" /v "DisableEnhancedNotifications" /t REG_DWORD /d "1" /f > $null
@@ -478,6 +471,9 @@ function create_marvel_gpo {
   # thats all folks!
   write-host("`n  [++] New Disable Defender GPO Created, Linked and Enforced `n")
   Get-GPO -Name "Disable Defender" | New-GPLink -target "DC=MARVEL,DC=local" -LinkEnabled Yes -Enforced Yes
+
+  write-host("`n  [++] Removing and unlinking Default Domain Policy")
+  Remove-GPLink -Name "Default Domain Policy" -target "DC=MARVEL,DC=local" | Out-Null 
   }
   # ---- end create_marvel_gpo
 
@@ -705,12 +701,10 @@ function server_build {
       # ---- end server_build function
 
 # ---- begin git_powersploit function      
-function git_powersploit {
-  write-host("`n  [++] Git Cloning PowerSploit to $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit")
-  git clone https://github.com/PowerShellMafia/PowerSploit $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit > $null 
-  # Import-Module $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit\Recon
-  # needs some additional work
-  }
+#function git_powersploit {
+#  write-host("`n  [++] Git Cloning PowerSploit to $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit")
+#  git clone https://github.com/PowerShellMafia/PowerSploit $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit > $null 
+#  }
   # ---- end git_powersploit function
 
 # ---- begin setup_git function
@@ -737,7 +731,18 @@ function setup_git {
   # reload environment variables 
   $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")  
   }
-# ---- end setup_git function
+  # ---- end setup_git function
+
+# ---- begin get_recon function 
+function git_recon() { 
+  # Put Recon in the right place (could be used on DC or Workstations) 
+  write-host("`n  [++] Downloading Powershell Mafia v1.9 to C:\TCM-Academy")
+  mkdir $HOME\Documents\WindowsPowerShell\Modules\Recon
+  git clone https://github.com/PowerShellMafia/PowerSploit C:\tcm-academy\PowerShellMafia
+  write-host("`n  [++] Copying Recon to C:\$HOME\Documents\WindowsPowerShell\Modules\Recon")
+  echo D | xcopy /e /y C:\tcm-academy\PowerShellMafia\Recon $HOME\Documents\WindowsPowerShell\Modules\Recon
+  }
+  # ---- end git_recon function
 
 
 # ---- begin workstations_common function
@@ -748,13 +753,7 @@ function workstations_common {
 
   # download and install Git for Windows 
   setup_git 
-  git_powersploit
-
-  # add something here to gitclone powershell and place it in C:\Users\$USERNAME\Documents\WindowsPowerShell\Modules on both workstations
-  # mkdir C:\Users\$($env:UserName)\Documents\WindowsPowerShell\Modules\Recon
-  # git clone https://github.com/PowerShellMafia/PowerSploit C:\tcm-academy\PowerShellMafia
-  # xcopy /s /e /y C:\tcm-academy\PowerShellMafia\Recon\  C:\Users\$($eng:Username)\Documents\WindowsPowerShell\Modules\Recon
-  
+   
   # install remote system administration tools
   write-host("`n  [++] Installing Remote System Administration Tools (RSAT)") 
   Add-WindowsCapability -Online -Name Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0 | Out-Null
@@ -774,6 +773,10 @@ function workstations_common {
   write-host("`n  [++] Downloading Powerview v1.9 to C:\TCM-Academy")
   Invoke-WebRequest  https://raw.githubusercontent.com/PowerShellEmpire/PowerTools/version_1.9/PowerView/powerview.ps1 -o C:\TCM-Academy\Powerview.ps1 | Out-Null
   
+  #Git PowershellMafia's Recon and drop it in $HOME\Documents\WindowsPowerShell\Modules\Recon
+  # Will work for the DC wont work for the Workstation as its not logged into the domain yet... 
+  # git_recon 
+
   # download and unzip pstools.zip to c:\pstools 
   write-host("`n  [++] Downloading PSTools to C:\TCM-Academy")
   Invoke-WebRequest  https://download.sysinternals.com/files/PSTools.zip -o C:\TCM-Academy\PStools.zip | Out-Null
@@ -907,7 +910,7 @@ function menu {
 
   if ("$osversion" -eq "Microsoft Windows Server 2019 Standard Evaluation") 
     { menu }
-    elseif ("$osversion" -eq "Microsoft Windows Server 2016 Standard Evaluation") 
+    elseif ("$osversion" -eq "Microsoft Windows Server 2016 Standard") 
     { menu }  
     elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise Evaluation") 
     { menu }
