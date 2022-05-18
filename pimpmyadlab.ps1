@@ -846,6 +846,8 @@ function workstation_spiderman {
     }
     elseif ($machine -eq "SPIDERMAN") {
       workstations_common 
+      #add fcastle as a local administrator on the spiderman machine 
+      Add-LocalGroupMember -Group Administrators -Member Fcastle -Verbose
       Read-Host -Prompt "`n All done! $machine is all setup! `n Press Enter to reboot and Login as MARVEL\pparker and Password2 "
       restart-computer 
       }
