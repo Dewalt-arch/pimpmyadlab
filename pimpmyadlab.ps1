@@ -419,7 +419,19 @@ function create_marvel_gpo {
   #reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" /v "Start" /t REG_DWORD /d "0" /f > $null
   Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" -ValueName "Start" -Value 0 -Type Dword | Out-Null 
  
-  # smb signing is enabled but not required (breakout into individual fix function)
+  # smb1 enabled 
+  #Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -ValueName "SMB1" -Value 1 -Type Dword | Out-Null 
+  #  
+  # move the enable-windowsoptionalfeature to both the DC and Workstation builds 
+  # set smb1 = enabled in both DC and Workstations Registries ( locally )
+  # set smb1 = enabled via GPO for the domain 
+  # Enable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart 
+  # Set-SmbServerConfiguration -EnableSMB1Protocol $true -RequireSecuritySignature $False -EnableSecuritySignature $True -Confirm:$false
+  # Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -ValueName "SMB1" -Value 1 -Type Dword | Out-Null 
+  # Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" SMB1 -Type DWORD -Value 1 -Force
+
+
+  # smb2 signing is enabled but not required (breakout into individual fix function)
   write-host("`n  [++] Setting GPO Registry key: Defender SMB2 Client RequireSecuritySignature")
   #reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v "RequireSecuritySignature" /t REG_DWORD /d "0" /f > $null
   Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" -ValueName "RequireSecuritySignature" -Value 0 -Type Dword | Out-Null
@@ -449,13 +461,6 @@ function create_marvel_gpo {
   write-host("`n  [++] Setting GPO Registry key: WindowsUpdate")
   # reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d "1" /f > $null
   Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -ValueName "NoAutoUpdate" -Value 1 -Type Dword | Out-Null
-
-  # smb v1 - needs to be moved somwhere else
-  #Enable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart 
-  #Set-SmbServerConfiguration -EnableSMB1Protocol $true -RequireSecuritySignature $False -EnableSecuritySignature $True -Confirm:$false
-  # Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" SMB1 -Type DWORD -Value 1 -Force
-
-  # smb v2 - needs to be moved somewhere else 
 
   # quality of life improvements gpo-policy pushed 
     # Dark Mode GPO 
@@ -915,6 +920,8 @@ function menu {
     elseif ("$osversion" -eq "Microsoft Windows Server 2016 Standard") 
     { menu }  
     elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise Evaluation") 
+    { menu }
+    elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise 2016 LTSB")
     { menu }
     elseif ("$osversion" -like "Home") {      
       write-host("`n [!!] Windows Home is unable to join a domain, please use the correct version of windows")
