@@ -28,6 +28,12 @@ Requirements :
   - Yaseen (PNPT Certified) for Alpha/Beta Testing!
   - uCald4aMarine Release Candidate Testing 
 
+# Revision 1.0.7
+  - create_marvel_gpo function updated to add more support for the fix gpo menu option F
+   - no longer statically sets "marvel" as the domain name
+   - will now work with any domain name that is currently running
+
+
 # Revision 1.0.6 
   - Correction to GPO Policy, was linked but not enforced 
   - GPO Policy Disable Defender is now Enforced  

@@ -20,6 +20,19 @@
 #  DNS On Workstations is set to DC's ip of x.x.x.250
 #
 
+function check_ipaddress {
+  $CheckIPAddress=Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress
+  # split the ip address up based on the . 
+  $CheckIPByte = $CheckIPAddress.Split(".")
+  
+  # first 3 octets not intrested in, only the last octet set to .250 (ip address)
+  if ($CheckIPByte[0] -eq "169") 
+   { write-host("You have a major networking issue as $CheckIPaddress is a LinkLocal Adress, Check your Hypervisor configuration")
+     exit } 
+   else 
+   { write-host("Network IP is not a Link local ip address range.. Coninuing")} 
+  }
+
 
 # -- being set_mppref function
 function set_mppref {
@@ -340,9 +353,9 @@ function create_labcontent {
 
   # ---- begin create_marvel_gpo
 function create_marvel_gpo {
-  
+  $CurrentDomain=((gwmi Win32_ComputerSystem).Domain).Split(".")[0]
   write-host("`n  [++] Removing Disable Defender Policy and Unlinking from Domain")
-  Get-GPO -Name "Disable Defender" | Remove-GPLink -target "DC=Marvel,DC=local" | Remove-GPO -Name "Disable Defender" > $null 
+  Get-GPO -Name "Disable Defender" | Remove-GPLink -target "DC=$CurrentDomain,DC=local" | Remove-GPO -Name "Disable Defender" > $null 
  
   write-host("`n  [++] Creating new Disable Defender Group Policy Object")
   New-GPO -Name "Disable Defender"
@@ -478,7 +491,7 @@ function create_marvel_gpo {
   Get-GPO -Name "Disable Defender" | New-GPLink -target "DC=MARVEL,DC=local" -LinkEnabled Yes -Enforced Yes
 
   write-host("`n  [++] Removing and unlinking Default Domain Policy")
-  Remove-GPLink -Name "Default Domain Policy" -target "DC=MARVEL,DC=local" | Out-Null 
+  Remove-GPLink -Name "Default Domain Policy" -target "DC=$CurrentDomain,DC=local" | Out-Null 
   }
   # ---- end create_marvel_gpo
 
