@@ -5,7 +5,7 @@
 # https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 #
 # Scripted By: Dewalt         
-# Revision 1.0.6 - see readme.md for revision notes   
+# Revision 1.0.7 - see readme.md for revision notes   
 #    
 # Special Thanks to :
 #  ToddAtLarge (PNPT Certified) for the NukeDefender script 
