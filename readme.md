@@ -149,6 +149,7 @@ Each run will require the following :
   - function now dynamically aquires the machine name and domain-name
     instead of set to static values of "hydra-dc" and "marvel" and will now 
     work with any machine name and domain name now  
+  - added check_ip function and fails if ip is 169.254
   - revision history moved to the bottom of the readme.md 
 
 # Revision 1.0.7

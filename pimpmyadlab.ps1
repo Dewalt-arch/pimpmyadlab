@@ -25,12 +25,12 @@ function check_ipaddress {
   # split the ip address up based on the . 
   $CheckIPByte = $CheckIPAddress.Split(".")
   
-  # first 3 octets not intrested in, only the last octet set to .250 (ip address)
-  if ($CheckIPByte[0] -eq "169") 
-   { write-host("You have a major networking issue as $CheckIPaddress is a LinkLocal Adress, Check your Hypervisor configuration")
+  # first 2 octets of ip address only 
+  if ($CheckIPByte[0] -eq "169" -And $CheckIPByte[1] -eq "254") 
+   { write-host("`n [ ERROR ] - $CheckIPaddress is a LinkLocal Adress, Check your Hypervisor configuration `n`n")
      exit } 
-   else 
-   { write-host("Network IP is not a Link local ip address range.. Coninuing")} 
+  # else 
+  # { write-host("Network IP is not a Link local ip address range.. Continuing")} 
   }
 
 
@@ -259,7 +259,7 @@ function create_labcontent {
   write-host("`n  [++] Installing RSAT-ADCS and RSAT-ADCS-Management")
   Add-WindowsFeature RSAT-ADCS,RSAT-ADCS-mgmt -WarningAction SilentlyContinue | Out-Null
 
-  # create C:\share\hacke me and smbshare
+  # create C:\share\hackme me and smbshare
   write-host("`n  [++] Creating Share C:\Share\hackme - Permissions Everyone FullAccess")
   mkdir C:\Share\hackme > $null
   New-SmbShare -Name "hackme" -Path "C:\Share\hackme" -ChangeAccess "Users" -FullAccess "Everyone" -WarningAction SilentlyContinue | Out-Null
@@ -944,6 +944,9 @@ function menu {
   write-host("`n`n   Computer Name : $machine")
   write-host("     Domain Name : $domain")
   write-host("      OS Version : $osversion")
+
+  # execute function check_ipaddress test if ip address is 169.254.0.0/16 if it is.. fail and exit 
+  check_ipaddress
 
   if ("$osversion" -eq "Microsoft Windows Server 2019 Standard Evaluation") 
     { menu }
