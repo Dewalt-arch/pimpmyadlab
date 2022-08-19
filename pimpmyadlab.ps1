@@ -149,37 +149,37 @@ function fix_setspn {
   $ShortDomainName=((gwmi Win32_ComputerSystem).Domain).Split(".")[0]
   $machine=$env:COMPUTERNAME
   write-host("`n  [++] Deleting Existing SPNs")
-  setspn -D SQLService/MARVEL.local HYDRA-DC > $null
-  setspn -D SQLService/Marvel.local MARVEL\SQLService > $null
-  setspn -D HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
-  setspn -D MARVEL/SQLService.Marvel.local:60111 MARVEL\SQLService > $null
-  setspn -D DomainController/SQLService.MARVEL.Local:60111 MARVEL\SQLService > $null
+  #setspn -D SQLService/MARVEL.local HYDRA-DC > $null
+  #setspn -D SQLService/Marvel.local MARVEL\SQLService > $null
+  #setspn -D HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  #setspn -D MARVEL/SQLService.Marvel.local:60111 MARVEL\SQLService > $null
+  #setspn -D DomainController/SQLService.MARVEL.Local:60111 MARVEL\SQLService > $null
   #--- new code 
-  #setspn -D SQLService/$FullDomainName $machine > $null
-  #setspn -D SQLService/$FullDomainName $ShortDomainName\SQLService > $null
-  #setspn -D $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
-  #setspn -D $ShortDomainName/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
-  #setspn -D DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  setspn -D SQLService/$FullDomainName $machine > $null
+  setspn -D SQLService/$FullDomainName $ShortDomainName\SQLService > $null
+  setspn -D $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  setspn -D $ShortDomainName/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  setspn -D DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
 
   # add the new spn
   write-host("`n  [++] Adding SPNs")
-  setspn -A HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
-  setspn -A SQLService/MARVEL.local  MARVEL\SQLService > $null
-  setspn -A DomainController/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  #setspn -A HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  #setspn -A SQLService/MARVEL.local  MARVEL\SQLService > $null
+  #setspn -A DomainController/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
   # -- new code 
-  #setspn -A $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
-  #setspn -A SQLService/$FullDomainName $ShortDomainName\SQLService > $null
-  #setspn -A DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  setspn -A $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  setspn -A SQLService/$FullDomainName $ShortDomainName\SQLService > $null
+  setspn -A DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
 
   # check both local and domain spns (add additional if statements here)
   write-host("`n  [++] Checking Local Hydra-DC SPN")
-  setspn -L HYDRA-DC
+  #setspn -L HYDRA-DC
   # -- new code 
-  #setspn -L $machine 
+  setspn -L $machine 
   write-host("`n  [++] Checking MARVEL\SQLService SPN")
-  setspn -L MARVEL\SQLService
+  #setspn -L MARVEL\SQLService
   # -- new code 
-  #setspn -L $ShortDomainName\SQLService
+  setspn -L $ShortDomainName\SQLService
   }
   # ---- end fix_setspn function 
 
@@ -599,8 +599,25 @@ function set_spiderman_staticip {
   # ---- end set_spiderman_staticip function
 
 function fix_dcdns {
+  $IPAddress=Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress
+  
+  # get the adapter name
   $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
   
+  # split the ip address up based on the . 
+  $IPByte = $IPAddress.Split(".")
+  
+  # first 3 octets not intrested in, only the last octet set to .250 (ip address)
+  $StaticIP = ($IPByte[0]+"."+$IPByte[1]+"."+$IPByte[2]+".250") 
+
+  # first 3 octets not intrested in, onlly the last octet set to .1 (default gateway)
+  $StaticGateway = ($IPByte[0]+"."+$IPByte[1]+"."+$IPByte[2]+".1") 
+
+  # static mask of 24 bits or 255.255.255.0
+  $StaticMask = "255.255.255.0"
+   
+  netsh interface ipv4 set address name="$adapter" static $StaticIP $StaticMask $StaticGateway
+
   write-host "`n  [++] Disabling $adapter Power Management"
   Disable-NetAdapterPowerManagement -Name "$adapter"
   
