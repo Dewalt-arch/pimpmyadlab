@@ -5,12 +5,12 @@
 # https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 #
 # Scripted By: Dewalt         
-# Revision 1.0.7 - see readme.md for revision notes   
+# Revision 2.0.0 - see readme.md for revision notes   
 #    
 # Special Thanks to :
 #  ToddAtLarge (PNPT Certified) for the NukeDefender script 
 #  Yaseen (PNPT Certified) for Alpha/Beta Testing!
-#  uCald4aMarine Release Candidate Testing
+#  
 # 
 #  -- Autoconfigured IP Addresses --
 #  DC will always have ip x.x.x.250
@@ -122,6 +122,7 @@ function nukedefender {
   write-host("`n  [++] Quality of life improvement - Dark Theme")
   # Set-ItemProperty -Path "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -Value 0 
   reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "AppsUseLightTheme" /t REG_DWORD /d "0" /f > $null
+  reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "SystemUsesLightTheme" /t REG_DWORD /d "0" /f > $null
 
   # Disable screen locker, timeout
   write-host("`n  [++] Quality of life improvement - Disable ScreenSaver, ScreenLock and Timeout")
@@ -148,37 +149,37 @@ function fix_setspn {
   $ShortDomainName=((gwmi Win32_ComputerSystem).Domain).Split(".")[0]
   $machine=$env:COMPUTERNAME
   write-host("`n  [++] Deleting Existing SPNs")
-  #setspn -D SQLService/MARVEL.local HYDRA-DC > $null
-  #setspn -D SQLService/Marvel.local MARVEL\SQLService > $null
-  #setspn -D HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
-  #setspn -D MARVEL/SQLService.Marvel.local:60111 MARVEL\SQLService > $null
-  #setspn -D DomainController/SQLService.MARVEL.Local:60111 MARVEL\SQLService > $null
+  setspn -D SQLService/MARVEL.local HYDRA-DC > $null
+  setspn -D SQLService/Marvel.local MARVEL\SQLService > $null
+  setspn -D HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  setspn -D MARVEL/SQLService.Marvel.local:60111 MARVEL\SQLService > $null
+  setspn -D DomainController/SQLService.MARVEL.Local:60111 MARVEL\SQLService > $null
   #--- new code 
-  setspn -D SQLService/$FullDomainName $machine > $null
-  setspn -D SQLService/$FullDomainName $ShortDomainName\SQLService > $null
-  setspn -D $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
-  setspn -D $ShortDomainName/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
-  setspn -D DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  #setspn -D SQLService/$FullDomainName $machine > $null
+  #setspn -D SQLService/$FullDomainName $ShortDomainName\SQLService > $null
+  #setspn -D $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  #setspn -D $ShortDomainName/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  #setspn -D DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
 
   # add the new spn
   write-host("`n  [++] Adding SPNs")
-  #setspn -A HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
-  #setspn -A SQLService/MARVEL.local  MARVEL\SQLService > $null
-  #setspn -A DomainController/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  setspn -A HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  setspn -A SQLService/MARVEL.local  MARVEL\SQLService > $null
+  setspn -A DomainController/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
   # -- new code 
-  setspn -A $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
-  setspn -A SQLService/$FullDomainName $ShortDomainName\SQLService > $null
-  setspn -A DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  #setspn -A $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  #setspn -A SQLService/$FullDomainName $ShortDomainName\SQLService > $null
+  #setspn -A DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
 
   # check both local and domain spns (add additional if statements here)
   write-host("`n  [++] Checking Local Hydra-DC SPN")
-  # setspn -L HYDRA-DC
+  setspn -L HYDRA-DC
   # -- new code 
-  setspn -L $machine 
+  #setspn -L $machine 
   write-host("`n  [++] Checking MARVEL\SQLService SPN")
-  #setspn -L MARVEL\SQLService
+  setspn -L MARVEL\SQLService
   # -- new code 
-  setspn -L $ShortDomainName\SQLService
+  #setspn -L $ShortDomainName\SQLService
   }
   # ---- end fix_setspn function 
 
@@ -188,7 +189,7 @@ function fix_adcsca {
   Install-AdcsCertificationAuthority -Force | Out-Null
   write-host ("`n  [++] Installing new ADCSCertificateAuthority `n")
   Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" `
-  -KeyLength 2048 -HashAlgorithmName SHA1 -ValidityPeriod Years -ValidityPeriodUnits 99 -WarningAction SilentlyContinue -Force | Out-Null 
+  -KeyLength 2048 -HashAlgorithmName SHA256 -ValidityPeriod Years -ValidityPeriodUnits 99 -WarningAction SilentlyContinue -Force | Out-Null 
   #hold on this part may not be needed
   #Read-Host -Prompt "`n Press ENTER to continue..."
   #restart-computer 
@@ -274,11 +275,11 @@ function create_labcontent {
   reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint" /v "NoWarningNoElevationOnInstall" /t REG_DWORD /d "1" /f > $null
   reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint" /v "RestrictDriverInstallationToAdministrators" /t REG_DWORD /d "0" /f > $null
 
-  # set localaccounttokenfilterpolicy
+  # set localaccounttokenfilterpolicy (breakout into individual fix function)
   write-host("`n  [++] Setting Registry Key for LocalAccountTokenFilterPolicy")
-  reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system" /v "LocalAccountTokenFilterPolicy" /t REG_DWORD /d "1" /f
+  reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system" /v "LocalAccountTokenFilterPolicy" /t REG_DWORD /d "1" /f > $null
 
-  # set alwaysinstallelevated 
+  # set alwaysinstallelevated (breakout into individual fix function)
   write-host("`n  [++] Setting Registry Key for AlwaysInstallElevated")
   red add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer" -v "AlwaysInstallElevated" /t REG_DWORD /d "1" /f > $null 
 
@@ -289,9 +290,11 @@ function create_labcontent {
   # Update-AdmPwdADSchema
   
   # set dns config of ethernet card on dc to 127.0.0.1
-  $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
-  write-host("`n  [++] Setting DNS Server to 127.0.0.1 on interface $adapter")
-  Set-DNSClientServerAddress "$adapter" -ServerAddresses ("127.0.0.1") | Out-Null
+  
+  # HERE IS THE IPV6 PROBLEM!!! Something to do with setting the dns on the nic borks the ipv6 
+  #$adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
+  #write-host("`n  [++] Setting DNS Server to 127.0.0.1 on interface $adapter")
+  #Set-DNSClientServerAddress "$adapter" -ServerAddresses ("127.0.0.1") | Out-Null
 
   # create user pparker
   New-ADUser -Name "Peter Parker" -GivenName "Peter" -Surname "Parker" -SamAccountName "pparker" `
@@ -313,7 +316,7 @@ function create_labcontent {
   Write-Host "        Adding Frank Castle to Marvel.local Groups: Domain Users, Domain Admins"
 
   # create user tstark 
-  New-ADUser -Name "`n  [++] User: Tony Stark" -GivenName "Tony" -Surname "Stark" -SamAccountName "tstark" `
+  New-ADUser -Name "Tony Stark" -GivenName "Tony" -Surname "Stark" -SamAccountName "tstark" `
   -UserPrincipalName "tstark@$Global:Domain -Path DC=marvel,DC=local" `
   -AccountPassword (ConvertTo-SecureString "Password2019!@#" -AsPlainText -Force) `
   -PasswordNeverExpires $true -PassThru | Enable-ADAccount | Out-Null
@@ -496,7 +499,8 @@ function create_marvel_gpo {
     # Dark Mode GPO 
     write-host("`n  [++] Setting GPO Registry key: Dark Theme")
     Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -ValueName "AppsUseLightTheme" -Value 0 -Type Dword | Out-Null
-
+    Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -ValueName "SystemUsesLightTheme" -Value 0 -Type Dword | Out-Null
+    
     # Disable screen time out and screen locker (its a lab!)
     write-host("`n  [++] Setting GPO Registry key: Disable Screenlock, timer")
     Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Panel\Desktop\" -ValueName "ScreenSaveTimeOut" -Value 0 -Type Dword
@@ -530,46 +534,12 @@ function set_dcstaticip {
   $StaticGateway = ($IPByte[0]+"."+$IPByte[1]+"."+$IPByte[2]+".1") 
 
   # static mask of 24 bits or 255.255.255.0
-  $StaticMask = 24 
+  $StaticMask = "255.255.255.0"
 
-  # ipv4
-  $IpType = "IPv4"
-  
-  # ip address parameteres list
-  $ipParams = @{
-  InterfaceAlias = "$adapter"
-  IPAddress = "$StaticIP"
-  PrefixLength = $StaticMask
-  DefaultGateway = "$StaticGateway"
-  AddressFamily = "IPv4"
-  }
-  
-  # dns parameters list 
-  $dnsParams = @{
-  InterfaceAlias = "$adapter"
-  ServerAddresses = ("8.8.8.8")
-  }
-  
-  # write to screen what were doing 
-  write-host "$StaticIP / $StaticGateway"
-  
-  $upadapter = Get-NetAdapter | ? {$_.Status -eq "up"}
-  
-  # remove config if any 
-  If (($upadapter | Get-NetIPConfiguration).IPv4Address.IPAddress) {$upadapter | Remove-NetIPAddress -AddressFamily $IPType -Confirm:$false}
-  If (($upadapter | Get-NetIPConfiguration).Ipv4DefaultGateway) {$upadapter | Remove-NetRoute -AddressFamily $IPType -Confirm:$false}
-  
-  # make sure its not set for dhcp anymore
-  Set-NetIPInterface -InterfaceAlias "$adapter" -Dhcp Disabled
-  
-  # set the new ip address to .250 and the default gateway to .1  subnet = 255.255.255.0
-  New-NetIPAddress @ipParams
-
-  # set the dns based on parameters
-  Set-DnsClientServerAddress @dnsParams
-  
-  # restart the network adapter
-  Restart-NetAdapter "$adapter"
+  write-host "$adapter $StaticIP $StaticMask $StaticGateway"
+ 
+  netsh interface ipv4 set address name="$adapter" static $StaticIP $StaticMask $StaticGateway
+  netsh interface ipv4 set dnsservers name="$adapter" static 8.8.8.8
   }
   # ---- end set_dcstaticip function  
 
@@ -591,46 +561,12 @@ function set_punisher_staticip {
   $StaticGateway = ($IPByte[0]+"."+$IPByte[1]+"."+$IPByte[2]+".1") 
  
   # static mask of 24 bits or 255.255.255.0
-  $StaticMask = 24 
+  $StaticMask = "255.255.255.0"
+
+  write-host "$adapter $StaticIP $StaticMask $StaticGateway"
  
-  # ipv4
-  $IpType = "IPv4"
-   
-  # ip address parameteres list
-  $ipParams = @{
-  InterfaceAlias = "$adapter"
-  IPAddress = "$StaticIP"
-  PrefixLength = $StaticMask
-  DefaultGateway = "$StaticGateway"
-  AddressFamily = "IPv4"
-  }
-   
-  # dns parameters list 
-  $dnsParams = @{
-  InterfaceAlias = "$adapter"
-  ServerAddresses = ("8.8.8.8")
-  }
-   
-  # write to screen what were doing 
-  write-host "$StaticIP / $StaticGateway"
-   
-  $upadapter = Get-NetAdapter | ? {$_.Status -eq "up"}
-   
-  # remove config if any 
-  If (($upadapter | Get-NetIPConfiguration).IPv4Address.IPAddress) {$upadapter | Remove-NetIPAddress -AddressFamily $IPType -Confirm:$false}
-  If (($upadapter | Get-NetIPConfiguration).Ipv4DefaultGateway) {$upadapter | Remove-NetRoute -AddressFamily $IPType -Confirm:$false}
-   
-  # make sure its not set for dhcp anymore
-  Set-NetIPInterface -InterfaceAlias "$adapter" -Dhcp Disabled
-   
-  # set the new ip address to .250 and the default gateway to .1  subnet = 255.255.255.0
-  New-NetIPAddress @ipParams
- 
-  # set the dns based on parameters
-  Set-DnsClientServerAddress @dnsParams
-   
-  # restart the network adapter
-  Restart-NetAdapter "$adapter"
+  netsh interface ipv4 set address name="$adapter" static $StaticIP $StaticMask $StaticGateway
+  netsh interface ipv4 set dnsservers name="$adapter" static 8.8.8.8
   }
   # ---- end set_punisher_staticip function  
 
@@ -652,48 +588,44 @@ function set_spiderman_staticip {
   $StaticGateway = ($IPByte[0]+"."+$IPByte[1]+"."+$IPByte[2]+".1") 
 
   # static mask of 24 bits or 255.255.255.0
-  $StaticMask = 24 
+  $StaticMask = "255.255.255.0"
 
-  # ipv4
-  $IpType = "IPv4"
-  
-  # ip address parameteres list
-  $ipParams = @{
-  InterfaceAlias = "$adapter"
-  IPAddress = "$StaticIP"
-  PrefixLength = $StaticMask
-  DefaultGateway = "$StaticGateway"
-  AddressFamily = "IPv4"
-  }
-  
-  # dns parameters list 
-  $dnsParams = @{
-  InterfaceAlias = "$adapter"
-  ServerAddresses = ("8.8.8.8")
-  }
-  
-  # write to screen what were doing 
-  write-host "$StaticIP / $StaticGateway"
-  
-  $upadapter = Get-NetAdapter | ? {$_.Status -eq "up"}
-  
-  # remove config if any 
-  If (($upadapter | Get-NetIPConfiguration).IPv4Address.IPAddress) {$upadapter | Remove-NetIPAddress -AddressFamily $IPType -Confirm:$false}
-  If (($upadapter | Get-NetIPConfiguration).Ipv4DefaultGateway) {$upadapter | Remove-NetRoute -AddressFamily $IPType -Confirm:$false}
-  
-  # make sure its not set for dhcp anymore
-  Set-NetIPInterface -InterfaceAlias "$adapter" -Dhcp Disabled
-  
-  # set the new ip address to .250 and the default gateway to .1  subnet = 255.255.255.0
-  New-NetIPAddress @ipParams
+  write-host "`n  [++] Setting $adapter to IP: $StaticIP  Subnet: $StaticMask  Gateway: $StaticGateway"
+  netsh interface ipv4 set address name="$adapter" static $StaticIP $StaticMask $StaticGateway
 
-  # set the dns based on parameters
-  Set-DnsClientServerAddress @dnsParams
-  
-  # restart the network adapter
-  Restart-NetAdapter "$adapter"
+  write-host "`n  [++]  Setting $adapter to DNS: 8.8.8.8"
+  netsh interface ipv4 set dnsservers name="$adapter" static 8.8.8.8
   }  
   # ---- end set_spiderman_staticip function
+
+function fix_dcdns {
+  $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
+  
+  write-host "`n  [++] Disabling $adapter Power Management"
+  Disable-NetAdapterPowerManagement -Name "$adapter"
+  
+  write-host "`n  [++] Setting $adapter DNS to 127.0.0.1"
+  netsh interface ipv4 set dnsservers name="$adapter" static 127.0.0.1 
+  
+  write-host "`n  [++] Setting Ipv6 DNS to DHCP"
+  netsh interface ipv6 set dnsservers "$adapter" dhcp
+}
+
+function fix_workstationdns {
+  $DCDNS=(Test-Connection -comp HYDRA-DC -Count 1).ipv4address.ipaddressToString
+  
+  write-host("`n  [++] Found HYDRA-DC At $DCDNS")
+  $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
+  
+  write-host "`n  [++] Disabling $adapter Power Management"
+  Disable-NetAdapterPowerManagement -Name "$adapter"
+  
+  write-host "`n  [++] Setting $adapter DNS to $DCDNS"
+  netsh interface ipv4 set dnsservers name="$adapter" static $DCDNS
+  
+  write-host "`n  [++] Setting Ipv6 DNS to : DHCP"
+  netsh interface ipv6 set dnsservers "$adapter" dhcp
+  }
 
 # ---- begin server_build function
 function server_build {
@@ -723,11 +655,12 @@ function server_build {
         write-host("`n Computer name and Domain are correct : Executing CreateContent Function ")
         create_labcontent
         create_marvel_gpo
+        fix_dcdns 
         write-host("`n Script Run 3 of 3 - We are all done! Rebooting one last time! o7 Happy Hacking! ")
         $dcip=Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress
         write-host("`n`n Write this down! We need this in the Workstation Configruation... Domain Controller IP Address: $dcip `n`n")
         Read-Host -Prompt "`n`n Press ENTER to continue..."
-        Restart-Computer
+        restart-computer
         }
       else { 
         write-host("Giving UP! There is nothing to do!") 
@@ -822,18 +755,12 @@ function workstations_common {
   # create c:\share and smbshare
   mkdir C:\Share > $null 
   New-SmbShare -Name "Share" -Path "C:\Share" -ChangeAccess "Users" -FullAccess "Everyone" -WarningAction SilentlyContinue | Out-Null
-    
-  # get dns and set dns-config to domain controller ip address
-  # may change DCDNS to hydra-dc-ip for readability
-  $DCDNS=(Test-Connection -comp HYDRA-DC -Count 1).ipv4address.ipaddressToString
-  write-host(" Found HYDRA-DC At $DCDNS")
-  $adapter=Get-CimInstance -Class Win32_NetworkAdapter -Property NetConnectionID,NetConnectionStatus | Where-Object { $_.NetConnectionStatus -eq 2 } | Select-Object -Property NetConnectionID -ExpandProperty NetConnectionID
-  write-host(" Setting DNS Server to $DCDNS on adapter $adapter")
-  Set-DNSClientServerAddress "$adapter" -ServerAddresses ("$DCDNS")
+
+  fix_workstationdns
 
   # automatically join domain using tstark
   write-host("`n Joining machine to domain Marvel.local")
-  add-computer -domainname "MARVEL.LOCAL" -username administrator -restart | Out-Null
+  # add-computer -domainname "MARVEL.LOCAL" -username administrator -restart | Out-Null
   $domain = "MARVEL"
   $password = "Password2019!@#" | ConvertTo-SecureString -asPlainText -Force
   $username = "$domain\tstark" 

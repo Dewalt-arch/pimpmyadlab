@@ -144,6 +144,12 @@ Each run will require the following :
 
 # Revision history 
 
+# Revision 2.0.0
+  - changes to setting the network ip, gateway, subnet, dns no longer using a powershell array
+  - added registry keys AppsUseLightTheme and SystemUsesLightTheme = 0 
+  - reworked dc, punisher, and spiderman setups
+  - disable network card power management on all machines
+
 # Revision 1.0.8 
   - fix_setspn function enchancement (updated)
   - function now dynamically aquires the machine name and domain-name
