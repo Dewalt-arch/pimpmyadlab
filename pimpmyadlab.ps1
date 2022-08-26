@@ -149,37 +149,37 @@ function fix_setspn {
   $ShortDomainName=((gwmi Win32_ComputerSystem).Domain).Split(".")[0]
   $machine=$env:COMPUTERNAME
   write-host("`n  [++] Deleting Existing SPNs")
-  #setspn -D SQLService/MARVEL.local HYDRA-DC > $null
-  #setspn -D SQLService/Marvel.local MARVEL\SQLService > $null
-  #setspn -D HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
-  #setspn -D MARVEL/SQLService.Marvel.local:60111 MARVEL\SQLService > $null
-  #setspn -D DomainController/SQLService.MARVEL.Local:60111 MARVEL\SQLService > $null
+  setspn -D SQLService/MARVEL.local HYDRA-DC > $null
+  setspn -D SQLService/Marvel.local MARVEL\SQLService > $null
+  setspn -D HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  setspn -D MARVEL/SQLService.Marvel.local:60111 MARVEL\SQLService > $null
+  setspn -D DomainController/SQLService.MARVEL.Local:60111 MARVEL\SQLService > $null
   #--- new code 
-  setspn -D SQLService/$FullDomainName $machine > $null
-  setspn -D SQLService/$FullDomainName $ShortDomainName\SQLService > $null
-  setspn -D $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
-  setspn -D $ShortDomainName/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
-  setspn -D DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  #setspn -D SQLService/$FullDomainName $machine > $null
+  #setspn -D SQLService/$FullDomainName $ShortDomainName\SQLService > $null
+  #setspn -D $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  #setspn -D $ShortDomainName/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  #setspn -D DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
 
   # add the new spn
   write-host("`n  [++] Adding SPNs")
-  #setspn -A HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
-  #setspn -A SQLService/MARVEL.local  MARVEL\SQLService > $null
-  #setspn -A DomainController/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  setspn -A HYDRA-DC/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
+  setspn -A SQLService/MARVEL.local  MARVEL\SQLService > $null
+  setspn -A DomainController/SQLService.MARVEL.local:60111 MARVEL\SQLService > $null
   # -- new code 
-  setspn -A $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
-  setspn -A SQLService/$FullDomainName $ShortDomainName\SQLService > $null
-  setspn -A DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  #setspn -A $machine/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
+  #setspn -A SQLService/$FullDomainName $ShortDomainName\SQLService > $null
+  #setspn -A DomainController/SQLService.$FullDomainName:60111 $ShortDomainName\SQLService > $null
 
   # check both local and domain spns (add additional if statements here)
   write-host("`n  [++] Checking Local Hydra-DC SPN")
-  #setspn -L HYDRA-DC
+  setspn -L HYDRA-DC
   # -- new code 
-  setspn -L $machine 
+  #setspn -L $machine 
   write-host("`n  [++] Checking MARVEL\SQLService SPN")
-  #setspn -L MARVEL\SQLService
+  setspn -L MARVEL\SQLService
   # -- new code 
-  setspn -L $ShortDomainName\SQLService
+  #setspn -L $ShortDomainName\SQLService
   }
   # ---- end fix_setspn function 
 
@@ -868,9 +868,9 @@ function menu {
     'N'{  Write-Host "`n ONLY Running... the NukeDefender function and exit"
           nukedefender }
     'K'{  Write-Host "`n ONLY running... Fix SetSPN Function and exit"
-           fix_setspn }
+          fix_setspn }
     'A'{  Write-Host "`n ONLY running... Fix ADCSCertificateAuthority Function and exit"
-           fix_adcsca }                     
+          fix_adcsca }                     
     'X'{Return}
     }
   } 
