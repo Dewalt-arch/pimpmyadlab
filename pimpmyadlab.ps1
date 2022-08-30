@@ -656,7 +656,7 @@ function server_build {
       write-host("`n  - Script Run 1 of 3 - Setting the computer name to HYDRA-DC and rebooting")
       write-host("`n  AFTER The reboot run the script again! to setup the domain controller!")
       Read-Host -Prompt "`n Press ENTER to continue..."
-      set_mppref  # one time run of this function on the dc build 
+      #set_mppref  # one time run of this function on the dc build 
       set_dcstaticip
       Rename-Computer -NewName "HYDRA-DC" -Restart
       }
