@@ -33,7 +33,6 @@ function check_ipaddress {
   # { write-host("Network IP is not a Link local ip address range.. Continuing")} 
   }
 
-
 # -- being set_mppref function
 function set_mppref {
   # moved to its own function so it is only called once at the begining of each machine build
@@ -138,8 +137,8 @@ function remove_all_updates {
     $sUpdate=$_.HotFixID.Replace("KB","")
     write-host ("Uninstalling update "+$sUpdate);
     & wusa.exe /uninstall /KB:$sUpdate /quiet /norestart;
-    Wait-Process wusa
-        Start-Sleep -s 1 }
+    Wait-Process wusa 
+    Start-Sleep -s 1 }
   }
   # ---- end remove_all_updates 
 
@@ -188,6 +187,7 @@ function fix_setspn {
 # ---- begin fix_adcsca function 
 function fix_adcsca {
   write-host ("`n  [++] Removing ADCSCertificateAuthority")
+  # Install-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
   Install-AdcsCertificationAuthority -Force | Out-Null
   write-host ("`n  [++] Installing new ADCSCertificateAuthority `n")
   Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" `
@@ -195,7 +195,7 @@ function fix_adcsca {
   #hold on this part may not be needed
   #Read-Host -Prompt "`n Press ENTER to continue..."
   #restart-computer 
-  }     
+  }
   # ---- end fix_adcsca function  
 
 # ---- begin build_lab function 
@@ -211,6 +211,11 @@ function build_lab {
   # download and install latest version of git from github
   setup_git
 
+  # fix registry key fdrespub / network discovery in network exploerer
+  # write-host("`n  [++] Setting Registry key: FDResPub")
+  # reg add "HKLM\SYSTEM\CurrentControlSet\Services\FDResPub" /f /v DependOnService /t REG_MULTI_SZ /d "RpcSs\0http\0fpdhost\0LanmanWorkstation"
+  # red add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /f /v sc_fdrespub /t REG_EXPAND_SZ /d "sc config fdrespub depend= RpcSs/http/fdphost/LanmanWorkstation"
+  
   # install ad-domain-services
   write-host("`n  [++] Installing Module Active Directory Domain Services (ADDS)")
   Install-windowsfeature -name AD-Domain-Services -IncludeManagementTools -WarningAction SilentlyContinue | Out-Null
@@ -236,6 +241,15 @@ function build_lab {
   }
   # ---- end build_adlab function
 
+# ---- begin smb_signing function
+function smb_signing {
+  # smb signing is enabled but not required
+  write-host("`n  [++] Setting Registry Keys SMB Signing Enabled but not Required")
+  reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v "RequireSecuritySignature" /t REG_DWORD /d "0" /f > $null
+  reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v "RequireSecuritySignature" /t REG_DWORD /d "0" /f > $null
+  }
+  # ---- end smb_signing function 
+
 # ---- begin create_labcontent function
 function create_labcontent {
   $ErrorActionPreference = "SilentlyContinue"
@@ -250,9 +264,9 @@ function create_labcontent {
 
   # configure ad-certificate authority
   write-host("`n  [++] Configuring Active Directory Certificate Authority")
-  fix_adcsca
-  #Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" `
-  #-KeyLength 2048 -HashAlgorithmName SHA1 -ValidityPeriod Years -ValidityPeriodUnits 99 -WarningAction SilentlyContinue -Force | Out-Null
+  # fix_adcsca
+  Install-AdcsCertificationAuthority -CAType EnterpriseRootCa -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" `
+  -KeyLength 2048 -HashAlgorithmName SHA1 -ValidityPeriod Years -ValidityPeriodUnits 99 -WarningAction SilentlyContinue -Force | Out-Null
 
   # install remote system administration tools
   write-host("`n  [++] Installing Remote System Administration Tools (RSAT)")
@@ -267,10 +281,8 @@ function create_labcontent {
   mkdir C:\Share\hackme > $null
   New-SmbShare -Name "hackme" -Path "C:\Share\hackme" -ChangeAccess "Users" -FullAccess "Everyone" -WarningAction SilentlyContinue | Out-Null
 
-  # smb signing is enabled but not required (breakout into individual fix function)
-  write-host("`n  [++] Setting Registry Keys SMB Signing Enabled but not Required")
-  reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v "RequireSecuritySignature" /t REG_DWORD /d "0" /f > $null
-  reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v "requiresecuritysignature" /t REG_DWORD /d "0" /f > $null
+  # moved smb sigining to a function 
+  smb_signing
 
   # printer-nightmare registry keys (breakout into individual fix function)
   write-host("`n  [++] Setting Registry Keys for PrinterNightmare")
@@ -382,6 +394,12 @@ function create_marvel_gpo {
   write-host("`n  [++] Creating new Disable Defender Group Policy Object")
   New-GPO -Name "Disable Defender"
 
+  #reg add "HKLM\SYSTEM\CurrentControlSet\Services\FDResPub" /f /v DependOnService /t REG_MULTI_SZ /d "RpcSs\0http\0fpdhost\0LanmanWorkstation"
+  # write-host("`n  [++] Setting GPO Registry key: FDResPub")
+  # Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\SYSTEM\CurrentControlSet\Services\FDResPub" -ValueName "DependOnService" -Type MultiString -Value "RpcSs\0http\0fpdhost\0LanmanWorkstation"
+  # Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -ValueName "sc_fdredpub" -Type MultiString -Value "sc config fdrespub depend= RpcSs/http/fdphost/LanmanWorkstation"
+  # reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /f /v sc_fdrespub /t REG_EXPAND_SZ /d "sc config fdrespub depend= RpcSs/http/fdphost/LanmanWorkstation"
+  
   #reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /f /v EnableLUA /t REG_DWORD /d 0 > $null
   write-host("`n  [++] Setting GPO Registry key: EnableLUA")
   Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -ValueName "EnableLUA" -Value 0 -Type Dword | Out-Null
@@ -455,7 +473,7 @@ function create_marvel_gpo {
   Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" -ValueName "Start" -Value 0 -Type Dword | Out-Null 
  
   # smb1 enabled 
-  #Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -ValueName "SMB1" -Value 1 -Type Dword | Out-Null 
+  #Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -ValueName "SMB1" -Value 1 -Type Dword | Out-Null 
   #  
   # move the enable-windowsoptionalfeature to both the DC and Workstation builds 
   # set smb1 = enabled in both DC and Workstations Registries ( locally )
@@ -508,6 +526,11 @@ function create_marvel_gpo {
     Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Panel\Desktop\" -ValueName "ScreenSaveTimeOut" -Value 0 -Type Dword
     Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Panel\Desktop\" -ValueName "ScreenSaveActive" -Value 0 -Type Dword
     Set-GPRegistryValue -Name "Disable Defender" -Key "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Panel\Desktop\" -ValueName "ScreenSaverIsSecure" -Value 0 -Type Dword | Out-Null
+
+    # set ipv4 prefrence over ipv6 
+    Set-GPRegistryValue -Name "Disabled Components" -Key "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters\" -ValueName "DisabledComponents" -Value 0x20 -Type Dword 
+    # New-ItemProperty “HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters\” -Name “DisabledComponents” -Value 0x20 -PropertyType “DWord”
+    # Set-ItemProperty “HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters\” -Name “DisabledComponents” -Value 0x20
 
   # thats all folks!
   write-host("`n  [++] New Disable Defender GPO Created, Linked and Enforced `n")
@@ -658,7 +681,7 @@ function server_build {
       write-host("`n  - Script Run 1 of 3 - Setting the computer name to HYDRA-DC and rebooting")
       write-host("`n  AFTER The reboot run the script again! to setup the domain controller!")
       Read-Host -Prompt "`n Press ENTER to continue..."
-      #set_mppref  # one time run of this function on the dc build 
+      set_mppref  # one time run of this function on the dc build 
       set_dcstaticip
       Rename-Computer -NewName "HYDRA-DC" -Restart
       }
@@ -692,7 +715,7 @@ function server_build {
 #  write-host("`n  [++] Git Cloning PowerSploit to $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit")
 #  git clone https://github.com/PowerShellMafia/PowerSploit $Env:windir\System32\WindowsPowerShell\v1.0\Modules\PowerSploit > $null 
 #  }
-  # ---- end git_powersploit function
+   # ---- end git_powersploit function
 
 # ---- begin setup_git function
 function setup_git {
@@ -740,7 +763,10 @@ function workstations_common {
 
   # download and install Git for Windows 
   setup_git 
-   
+  
+  # write-host("`n  [++] Setting Registry key: FDResPub")
+  # reg add "HKLM\SYSTEM\CurrentControlSet\Services\FDResPub" /f /v DependOnService /t REG_MULTI_SZ /d "RpcSs\0http\0fpdhost\0LanmanWorkstation"
+  
   # install remote system administration tools
   write-host("`n  [++] Installing Remote System Administration Tools (RSAT)") 
   Add-WindowsCapability -Online -Name Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0 | Out-Null
@@ -901,6 +927,8 @@ function menu {
     elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise Evaluation") 
     { menu }
     elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise 2016 LTSB")
+    { menu }
+    elseif ("$osversion" -eq "Microsoft Windows 10 Pro")
     { menu }
     elseif ("$osversion" -like "Home") {      
       write-host("`n [!!] Windows Home is unable to join a domain, please use the correct version of windows")
