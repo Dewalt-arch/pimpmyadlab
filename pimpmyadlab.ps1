@@ -922,6 +922,8 @@ function menu {
 
   if ("$osversion" -eq "Microsoft Windows Server 2019 Standard Evaluation") 
     { menu }
+    elseif ("$osversion" -eq "Microsoft Windows Server 2019 Standard") 
+    { menu }  
     elseif ("$osversion" -eq "Microsoft Windows Server 2016 Standard") 
     { menu }  
     elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise Evaluation") 
