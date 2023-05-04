@@ -920,36 +920,36 @@ function menu {
   # execute function check_ipaddress test if ip address is 169.254.0.0/16 if it is.. fail and exit 
   check_ipaddress
   menu
-  #if ("$osversion" -eq "Microsoft Windows Server 2019 Standard Evaluation") 
-  #  { menu }
-  #  elseif ("$osversion" -eq "Microsoft Windows Server 2019 Standard") 
-  #  { menu }  
-  #  elseif ("$osversion" -eq "Microsoft Windows Server 2016 Standard") 
-  #  { menu }
-  #  elseif ("$osversion" -eq "Microsoft Windows Server 2022 Standard Evaluation") 
-  #  { menu }    
-  #  elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise Evaluation") 
-  #  { menu }
-  #  elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise 2016 LTSB")
-  #  { menu }
-  #  elseif ("$osversion" -eq "Microsoft Windows 10 Pro")
-  #  { menu }
-  #  elseif ("$osversion" -like "Home") {      
-  #    write-host("`n [!!] Windows Home is unable to join a domain, please use the correct version of windows")
-  #    exit 
-  #    }
-  #  elseif ("$osversion" -like "Education") {
-  #    write-host("`n [!!] Windows Educational versions cannot be used with this lab")
-  #  }
-  #  elseif ("$osversion" -like "Windows 11") {
-  #    write-host("`n [!!] Windows 11 cannot be used with this lab")
-  #    exit 
-  #    }
-    #elseif ("$osversion" -like "Windows Server 2022") {
-    #  write-host("`n [!!] Windows Server 2022 cannot be used with this lab")
-    #  exit 
-    #  }
-   # else { write-host("Unable to find a suitable OS Version for this lab - Exiting") 
-   #   }
+  if ("$osversion" -eq "Microsoft Windows Server 2019 Standard Evaluation") 
+    { menu }
+    elseif ("$osversion" -eq "Microsoft Windows Server 2019 Standard") 
+    { menu }  
+    elseif ("$osversion" -eq "Microsoft Windows Server 2016 Standard") 
+    { menu }
+    elseif ("$osversion" -eq "Microsoft Windows Server 2022 Standard Evaluation") 
+    { menu }    
+    elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise Evaluation") 
+    { menu }
+    elseif ("$osversion" -eq "Microsoft Windows 10 Enterprise 2016 LTSB")
+    { menu }
+    elseif ("$osversion" -eq "Microsoft Windows 10 Pro")
+    { menu }
+    elseif ("$osversion" -like "Home") {      
+      write-host("`n [!!] Windows Home is unable to join a domain, please use the correct version of windows")
+      exit 
+      }
+    elseif ("$osversion" -like "Education") {
+      write-host("`n [!!] Windows Educational versions cannot be used with this lab")
+      }
+    elseif ("$osversion" -like "Windows 11") {
+      write-host("`n [!!] Windows 11 cannot be used with this lab")
+      exit 
+      }
+    elseif ("$osversion" -like "Windows Server 2022") {
+      write-host("`n [!!] Windows Server 2022 cannot be used with this lab")
+      exit 
+      }
+      else { write-host("Unable to find a suitable OS Version for this lab - Exiting") 
+      }
       # ---- end main
     
