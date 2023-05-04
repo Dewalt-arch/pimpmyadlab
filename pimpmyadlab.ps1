@@ -945,10 +945,10 @@ function menu {
       write-host("`n [!!] Windows 11 cannot be used with this lab")
       exit 
       }
-    elseif ("$osversion" -like "Windows Server 2022") {
-      write-host("`n [!!] Windows Server 2022 cannot be used with this lab")
-      exit 
-      }
+    #elseif ("$osversion" -like "Windows Server 2022") {
+    #  write-host("`n [!!] Windows Server 2022 cannot be used with this lab")
+    #  exit 
+    #  }
     else { write-host("Unable to find a suitable OS Version for this lab - Exiting") 
       }
       # ---- end main
