@@ -1,4 +1,4 @@
-# PimpmyADLab.ps1 
+# PimpmyADLab.ps1
   (note: name and repo may change it is still under debate)
 
 TCM-Academy Practical Ethical Hacker Course - Active Directory Lab build script
