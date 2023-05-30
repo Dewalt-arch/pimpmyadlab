@@ -919,12 +919,11 @@ function menu {
 
   # execute function check_ipaddress test if ip address is 169.254.0.0/16 if it is.. fail and exit 
   check_ipaddress
-  menu
-
+  
   if ("$osversion" -eq "Microsoft Windows Server 2019 Standard Evaluation") 
     { menu }
-    elseif ("$osversion" -eq "Microsoft Windows Server 2022 Standard Evaluation") 
-    { menu }  
+    # elseif ("$osversion" -eq "Microsoft Windows Server 2022 Standard Evaluation") 
+    # { menu }  
     elseif ("$osversion" -eq "Microsoft Windows Server 2019 Standard") 
     { menu }  
     elseif ("$osversion" -eq "Microsoft Windows Server 2016 Standard") 
