@@ -908,7 +908,7 @@ function menu {
 # ---- begin main
   $ErrorActionPreference = "SilentlyContinue"
   clear 
-  $currentname=$env:COMPUTERNAME
+  $currentname=$env:COMPUTERNAME 
   $machine=$env:COMPUTERNAME
   $domain=$env:USERDNSDOMAIN
   $osversion=((Get-WmiObject -class Win32_OperatingSystem).Caption)
