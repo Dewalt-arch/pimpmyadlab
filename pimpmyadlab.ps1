@@ -515,6 +515,12 @@ function create_marvel_gpo {
   # reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d "1" /f > $null
   Set-GPRegistryValue -Name "Disable Defender" -Key "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -ValueName "NoAutoUpdate" -Value 1 -Type Dword | Out-Null
 
+  #winrm registry key 
+  # Set-GPRegistryValue -Name "WinRM" -Key "HKLM\Policies\Microsoft\Windows\WinRM\Service" -ValueName "AllowAutoConfig" -Value 1 -Type Dword | Out-Null
+  
+  #winrs registry key
+  # Set-GPRegistryValue -Name "WinRS" -key "HKLM\Policies\Microsoft\Windows\WinRM\Service\WinRS" -ValueName "AllowRemoteShellAccess" -Value 1 -Type Dword | Out-Null
+
   # quality of life improvements gpo-policy pushed 
     # Dark Mode GPO 
     write-host("`n  [++] Setting GPO Registry key: Dark Theme")
@@ -531,7 +537,7 @@ function create_marvel_gpo {
     Set-GPRegistryValue -Name "Disabled Components" -Key "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters\" -ValueName "DisabledComponents" -Value 0x20 -Type Dword 
     # New-ItemProperty “HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters\” -Name “DisabledComponents” -Value 0x20 -PropertyType “DWord”
     # Set-ItemProperty “HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters\” -Name “DisabledComponents” -Value 0x20
-
+    
   # thats all folks!
   write-host("`n  [++] New Disable Defender GPO Created, Linked and Enforced `n")
   Get-GPO -Name "Disable Defender" | New-GPLink -target "DC=MARVEL,DC=local" -LinkEnabled Yes -Enforced Yes
