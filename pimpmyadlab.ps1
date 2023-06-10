@@ -250,6 +250,15 @@ function smb_signing {
   }
   # ---- end smb_signing function 
 
+function get_sharphound {
+  $source_url = "https://github.com/BloodHoundAD/SharpHound/releases/download/v1.1.1/SharpHound-v1.1.1.zip"
+  mkdir C:\TCM-Academy\Sharphound
+  $destination_path = "C:\TCM-Academy\Sharphound"
+  Start-BitsTransfer -Source $source_url -Destination $destination_path 
+  Expand-Archive -Path $destination_path\SharpHound-v1.1.1.zip -DestinationPath $destination_path -Force
+  write-host("`n  [++] Installed Sharphound.exe to $destination_path ")
+  }  
+
 # ---- begin create_labcontent function
 function create_labcontent {
   $ErrorActionPreference = "SilentlyContinue"
@@ -703,6 +712,7 @@ function server_build {
         write-host("`n Computer name and Domain are correct : Executing CreateContent Function ")
         create_labcontent
         create_marvel_gpo
+        get_sharphound
         fix_dcdns 
         write-host("`n Script Run 3 of 3 - We are all done! Rebooting one last time! o7 Happy Hacking! ")
         $dcip=Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress
@@ -796,6 +806,9 @@ function workstations_common {
   # Will work for the DC wont work for the Workstation as its not logged into the domain yet... 
   # git_recon 
 
+  # download an unzip Sharphound.zipi to C:\TCM-Academy\Sharphound
+  get_sharphound 
+
   # download and unzip pstools.zip to c:\pstools 
   write-host("`n  [++] Downloading PSTools to C:\TCM-Academy")
   Invoke-WebRequest  https://download.sysinternals.com/files/PSTools.zip -o C:\TCM-Academy\PStools.zip | Out-Null
@@ -883,9 +896,10 @@ function menu {
     Write-host "`n`tPress 'F' to Fix Disable Defender GPO Policy"
     Write-Host "`n`tPress 'K' to only run the SetSPN Function"
     Write-Host "`n`tPress 'A' to only run the ADCSCertificateAuthority Function"
+    Write-Host "`n`tPress 'H' to only download sharphound.zip and extract to C:\TCM-Academy\Sharphound"
     Write-Host "`n`tPress 'X' to Exit"
     $choice = Read-Host "`n`tEnter Choice" } 
-    until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'F') -or ($choice -eq 'X') -or ($choice -eq 'K') -or ($choice -eq 'A'))
+    until (($choice -eq 'P') -or ($choice -eq 'D') -or ($choice -eq 'S') -or ($choice -eq 'N') -or ($choice -eq 'F') -or ($choice -eq 'X') -or ($choice -eq 'K') -or ($choice -eq 'A') -or ($choice -eq 'H'))
     
   switch ($choice) {
     'D'{  Write-Host "`n Running... Hydra-DC domain controller"
@@ -904,7 +918,9 @@ function menu {
     'K'{  Write-Host "`n ONLY running... Fix SetSPN Function and exit"
           fix_setspn }
     'A'{  Write-Host "`n ONLY running... Fix ADCSCertificateAuthority Function and exit"
-          fix_adcsca }                     
+          fix_adcsca }    
+    'H'{  Write-Host "`n ONLY running... Download Sharphound.zip and extract to c:\tcm-academy"
+          get_sharphound }                           
     'X'{Return}
     }
   } 

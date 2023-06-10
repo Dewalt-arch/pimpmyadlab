@@ -58,7 +58,12 @@ Each run will require the following :
   - **P**  to install for Punisher  Workstation #1 run 1 and 2 
   - **S**  to install for Spiderman Workstation #2 run 1 and 2 
   - **N**  to ***only*** run the Nukedefender function and exit
+  - **H**  to only Download and extract sharphound.zip and extract sharphound.exe
   - **X**  to exit the menu 
+
+# Updated June 10, 2023
+ - added function get_sharphound to dc and workstation setup
+ - added standalone Menu option H 
 
 # Domain Controller Instructions: 
  HYDRA-DC Domain Controller 
