@@ -19,7 +19,7 @@ Requirements :
  script have been carefully planned, to replicate the lab instructed setup per 
  TCM Academy/PEH course material and provide a scripted installation.  
  
- The function NukeDefender.ps1 has also been provided as a seperate script
+ The function NukeDefender.ps1 has also been provided as a separate script
  and menu functionality added to PimpmyADLab.ps1 for those that just need to 
  NukeDefender only and not rebuild the entire lab.  
 
@@ -54,7 +54,7 @@ Each run will require the following :
  3. Spiderman (Windows 10 Enterprise Client)
 
  # Menu 
-  - **D**  to install for Hydra-DC  Domain Controller , run 1 2 and 3 
+  - **D**  to install for Hydra-DC  Domain Controller, run 1 2 and 3 
   - **P**  to install for Punisher  Workstation #1 run 1 and 2 
   - **S**  to install for Spiderman Workstation #2 run 1 and 2 
   - **N**  to ***only*** run the Nukedefender function and exit
@@ -75,7 +75,7 @@ Each run will require the following :
     - Instructions on how to wget the script directly to the vm are located above
   
   - Select Menu Option **D** 
-  - Script must be run ***3 times*** in order to fully complete Domain Contoller installation and configuration
+  - Script must be run ***3 times*** in order to fully complete Domain Controller installation and configuration
    
   - ***Run 1*** - Sets the name of the computer to Hydra-DC, reboots automatically when done
     - After the reboot, Run script again, Select Menu Option D for Run #2 
@@ -84,7 +84,7 @@ Each run will require the following :
     - After the reboot, Run script again, Select Menu Option D for Run #3 
    
   - ***Run 3*** - Installs the contents for the Cert-Auth, Domain, Users, SetSPN, etc and various other things
-    - Final reboot of the system, domin controller is complete and ready for use! 
+    - Final reboot of the system, domain controller is complete and ready for use! 
 
 # Workstation #1 Instructions: 
  Punisher Workstation only (Windows 10 Enterprise Client Workstation)
@@ -94,7 +94,7 @@ Each run will require the following :
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm
-    - Instrcutions on how to wget the script directly to the are is located above
+    - Instructions on how to wget the script directly to the are is located above
 
   - Select Menu Option **P** 
     - Script must be run ***2 times*** to fully complete Workstation installation and configuation
@@ -124,7 +124,7 @@ Each run will require the following :
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
   - Copy script to the vm
-    - Instrcutions on how to wget the script directly to the vm are located above
+    - Instructions on how to wget the script directly to the vm are located above
 
   - Select Menu Option **S**
     - Script must be run 2 times to fully complete Workstation installation and configuation
@@ -156,8 +156,8 @@ Each run will require the following :
   - disable network card power management on all machines
 
 # Revision 1.0.8 
-  - fix_setspn function enchancement (updated)
-  - function now dynamically aquires the machine name and domain-name
+  - fix_setspn function enhancement (updated)
+  - function now dynamically acquires the machine name and domain-name
     instead of set to static values of "hydra-dc" and "marvel" and will now 
     work with any machine name and domain name now  
   - added check_ip function and fails if ip is 169.254
@@ -189,7 +189,7 @@ Each run will require the following :
 # Revision 1.0.3 
   - Any and all Windows Updates will be removed automatically on 
     - Domain controller Hydra-DC
-    - Workstataions : Punisher & Spiderman
+    - Workstations : Punisher & Spiderman
 
   Domain Controller Updates :   
   - Added autoconfiguration of DC to static ip instead of dhcp
@@ -228,7 +228,7 @@ Each run will require the following :
     
   - Added autodetection of domain controller ip address 
     - automatically sets dns configuration on the workstation
-    - elminates prompting the student for the ip address of the domain controller
+    - eliminates prompting the student for the ip address of the domain controller
     - removed prompt to enter ip address of the domain controller 
 
   - Added auto join of the domain marvel.local 
@@ -243,7 +243,7 @@ Each run will require the following :
   - Minor code cleanup
   
 # Revision 1.0.1a
-  - Added OS Version to on screen display above the menu 
+  - Added OS Version to on-screen display above the menu 
   - Added OS Detection, script will fail if it finds any of the following
     - "Windows 11", "Home", "Education" or "Server 2022"    
 
