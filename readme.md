@@ -26,7 +26,10 @@ Requirements :
 # Special Thanks to :
   - ToddAtLarge (PNPT Certified) for the NukeDefender script 
   - Yaseen (PNPT Certified) for Alpha/Beta Testing!
-  - uCald4aMarine Release Candidate Testing 
+
+# Code Contributors
+  - jmeliendrez  https://github.com/jmeliendrez
+  - wodensec     https://github.com/WodenSec
 
 # Installation and usage : 
  On each machine Domain Contoller, Workstation1 and Workstation2 : 
