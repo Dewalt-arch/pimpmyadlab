@@ -62,7 +62,7 @@ function nukedefender {
   
     # Enable Network Discovery 
     write-host("`n  [++] Enabling Network Discovery")
-    Get-NetFirewallRule -DisplayGroup 'Network Discovery'|Set-NetFirewallRule -Profile 'Private, Domain' `
+    Get-NetFirewallRule -Group '@FirewallAPI.dll,-32752' |Set-NetFirewallRule -Profile 'Private, Domain' `
     -Enabled true -PassThru|select Name,DisplayName,Enabled,Profile|ft -a | Out-Null
   
     # Disable all firewalling 
