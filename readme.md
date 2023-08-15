@@ -152,6 +152,9 @@ Each run will require the following :
 
 # Revision history 
 
+# Revision 2.0.1 
+  - added regsitry key to enable rdp in the gpo policy
+
 # Revision 2.0.0
   - changes to setting the network ip, gateway, subnet, dns no longer using a powershell array
   - added registry keys AppsUseLightTheme and SystemUsesLightTheme = 0 
