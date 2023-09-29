@@ -152,6 +152,9 @@ Each run will require the following :
 
 # Revision history 
 
+# Revision 2.0.3 
+  - local administrator on both spiderman and punisher activated and password set to Password1 
+
 # Revision 2.0.2 
   - local administrator account enabled on the punisher machine and password set to Password1
 

@@ -5,7 +5,7 @@
 # https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 #
 # Scripted By: Dewalt         
-# Revision 2.0.2 - see readme.md for revision notes   
+# Revision 2.0.3 - see readme.md for revision notes   
 #    
 # Special Thanks to :
 #  ToddAtLarge (PNPT Certified) for the NukeDefender script 
@@ -883,6 +883,10 @@ function workstation_spiderman {
     }
     elseif ($machine -eq "SPIDERMAN") {
       workstations_common 
+      Get-LocalUser -Name "Administrator" | Enable-LocalUser
+      $UserAccount = Get-LocalUser -Name "Administrator"
+      $UserAccountPassword = "Password1" | ConvertTo-SecureString -asPlainText -Force
+      $UserAccount | Set-LocalUser -Password $UserAccountPassword
       #add fcastle as a local administrator on the spiderman machine 
       Add-LocalGroupMember -Group Administrators -Member Fcastle -Verbose
       Read-Host -Prompt "`n All done! $machine is all setup! `n Press Enter to reboot and Login as MARVEL\pparker and Password2 "
