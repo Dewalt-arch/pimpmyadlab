@@ -96,6 +96,10 @@ function nukedefender {
   schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Disable > $null
 
   # disable windows update/automatic update
+  write-host("`n  [++] Stopping Windows Update service")
+  Get-Service -Name 'wuauserv' | Stop-Service -Force
+  write-host("`n  [++] Disabling Windows Update service")
+  Get-Service -Name 'wuauserv' | Set-Service -StartupType Disabled
   write-host("`n  [++] Nuking Windows Update")
   reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d "1" /f > $null
 
@@ -111,7 +115,7 @@ function nukedefender {
   # enable Network Discovery
   write-host("`n  [++] Enabling Network Discovery")
   Get-NetFirewallRule -Group '@FirewallAPI.dll,-32752' |Set-NetFirewallRule -Profile 'Private, Domain' `
-  -Enabled true -PassThru|select Name,DisplayName,Enabled,Profile|ft -a | Out-Null
+  -Enabled true -PassThru|Select-Object Name,DisplayName,Enabled,Profile|Format-Table -a | Out-Null
 
   # disable all firewalling (public, private, domain) - Server and Workstations
   write-host("`n  [++] Disabling Windows Defender Firewalls : Public, Private, Domain")
@@ -133,7 +137,7 @@ function nukedefender {
 
 # ---- begin remove_all_updates  
 function remove_all_updates {
-  Get-WmiObject -query "Select HotFixID  from Win32_QuickFixengineering" | sort-object -Descending -Property HotFixID|%{
+  Get-WmiObject -query "Select HotFixID  from Win32_QuickFixengineering" | sort-object -Descending -Property HotFixID|ForEach-Object{
     $sUpdate=$_.HotFixID.Replace("KB","")
     write-host ("Uninstalling update "+$sUpdate);
     & wusa.exe /uninstall /KB:$sUpdate /quiet /norestart;
@@ -144,8 +148,8 @@ function remove_all_updates {
 
 # ---- begin fix_setspn function 
 function fix_setspn {
-  $FullDomainName=((gwmi Win32_ComputerSystem).Domain)
-  $ShortDomainName=((gwmi Win32_ComputerSystem).Domain).Split(".")[0]
+  $FullDomainName=((Get-WmiObject Win32_ComputerSystem).Domain)
+  $ShortDomainName=((Get-WmiObject Win32_ComputerSystem).Domain).Split(".")[0]
   $machine=$env:COMPUTERNAME
   write-host("`n  [++] Deleting Existing SPNs")
   #setspn -D SQLService/MARVEL.local HYDRA-DC > $null
@@ -217,7 +221,7 @@ function build_lab {
   # red add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /f /v sc_fdrespub /t REG_EXPAND_SZ /d "sc config fdrespub depend= RpcSs/http/fdphost/LanmanWorkstation"
   
   # install ad-domain-services
-  write-host("`n  [++] Installing Module Active Directory Domain Services (ADDS)")
+  write-host("`n  [++] Installing Active Directory Domain Services (ADDS)")
   Install-windowsfeature -name AD-Domain-Services -IncludeManagementTools -WarningAction SilentlyContinue | Out-Null
 
   # import activedirectory module
@@ -396,7 +400,7 @@ function create_labcontent {
 
   # ---- begin create_marvel_gpo
 function create_marvel_gpo {
-  $CurrentDomain=((gwmi Win32_ComputerSystem).Domain).Split(".")[0]
+  $CurrentDomain=((Get-WmiObject Win32_ComputerSystem).Domain).Split(".")[0]
   write-host("`n  [++] Removing Disable Defender Policy and Unlinking from Domain")
   Get-GPO -Name "Disable Defender" | Remove-GPLink -target "DC=$CurrentDomain,DC=local" | Remove-GPO -Name "Disable Defender" > $null 
  
@@ -721,7 +725,7 @@ function server_build {
         fix_dcdns 
         write-host("`n Script Run 3 of 3 - We are all done! Rebooting one last time! o7 Happy Hacking! ")
         $dcip=Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress
-        write-host("`n`n Write this down! We need this in the Workstation Configruation... Domain Controller IP Address: $dcip `n`n")
+        write-host("`n`n Write this down! We need this in the Workstation Configuration... Domain Controller IP Address: $dcip `n`n")
         Read-Host -Prompt "`n`n Press ENTER to continue..."
         restart-computer
         }
@@ -757,7 +761,7 @@ function setup_git {
   write-host("`n  [++] Installing $($release.name)")
   Unblock-File -Path ".\$($release.name)"
   Start-Process .\$($release.name) -argumentlist "/silent /supressmsgboxes" -Wait  | Out-Null 
-  rm .\$($release.name)  
+  Remove-Item .\$($release.name)  
   
   # reload environment variables 
   $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")  
@@ -944,7 +948,7 @@ function menu {
 
 # ---- begin main
   $ErrorActionPreference = "SilentlyContinue"
-  clear 
+  Clear-Host 
   $currentname=$env:COMPUTERNAME 
   $machine=$env:COMPUTERNAME
   $domain=$env:USERDNSDOMAIN
