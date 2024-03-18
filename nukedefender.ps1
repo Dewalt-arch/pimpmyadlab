@@ -48,9 +48,13 @@ function nukedefender {
     schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Disable > $null
   
     # DISABLE WINDOWS AUTOMATIC UPDATE
+    write-host("`n  [++] Stopping Windows Update service")
+    Get-Service -Name 'wuauserv' | Stop-Service -Force
+    write-host("`n  [++] Disabling Windows Update service")
+    Get-Service -Name 'wuauserv' | Set-Service -StartupType Disabled
     write-host("`n  [++] Nuking Windows Update")
     reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d "1" /f > $null
-  
+
     # DISABLE REMOTE-UAC ( should solved the rcp_s_access_denied issue with Impacket may need to include w/ workstations )
     write-host("`n  [++] Nuking UAC")
     reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "LocalAccountTokenFilterPolicy" /t REG_DWORD /d "1" /f > $null
@@ -63,7 +67,7 @@ function nukedefender {
     # Enable Network Discovery 
     write-host("`n  [++] Enabling Network Discovery")
     Get-NetFirewallRule -Group '@FirewallAPI.dll,-32752' |Set-NetFirewallRule -Profile 'Private, Domain' `
-    -Enabled true -PassThru|select Name,DisplayName,Enabled,Profile|ft -a | Out-Null
+    -Enabled true -PassThru|Select-Object Name,DisplayName,Enabled,Profile|Format-Table -a | Out-Null
   
     # Disable all firewalling 
     write-host("`n  [++] Disabling Windows Defender Firewalls : Public, Private, Domain")

@@ -6,10 +6,10 @@ TCM-Academy Practical Ethical Hacker Course - Active Directory Lab build script
  
 Requirements : 
 - DomainController (Hydra-DC) 
-    - Windows 2019 Server (Standard Evaluation - Desktop Experience) required
+    - Windows 2019 or 2022 Server (Standard Evaluation - Desktop Experience) required
  
 - Workstations 
-    - Windows 10 Enterprise Client (Standard Evaluation - Desktop Experience) required
+    - Windows 10 Enterprise or Pro Client (Standard Evaluation - Desktop Experience) required
 
 # Note: 
  Disclaimer: Author assumes zero liability for any damages in any form. 
@@ -52,9 +52,9 @@ Each run will require the following :
 - You will be presented with a menu
 
  Lab build is 3 vms :
- 1. Hydra-DC  (Windows 2019 Server) 
- 2. Punisher  (Windows 10 Enterprise Client)
- 3. Spiderman (Windows 10 Enterprise Client)
+ 1. Hydra-DC  (Windows 2019 or 2022 Server) 
+ 2. Punisher  (Windows 10 Pro or Enterprise Client)
+ 3. Spiderman (Windows 10 Pro or Enterprise Client)
 
  # Menu 
   - **D**  to install for Hydra-DC  Domain Controller, run 1 2 and 3 
@@ -70,9 +70,9 @@ Each run will require the following :
 
 # Domain Controller Instructions: 
  HYDRA-DC Domain Controller 
- (Windows 2019 Server, Standard Eval Desktop Experience)
+ (Windows 2019 or 2022 Server, Standard Eval Desktop Experience)
 
-- Domain Controller only (Windows 2019 Server)
+- Domain Controller only (Windows 2019 or 2022 Server)
   - Install the OS in the vm 
   - Install the Hypervisor GuestOS Additions/Tools, Reboot
     - Instructions on how to wget the script directly to the vm are located above
@@ -90,7 +90,7 @@ Each run will require the following :
     - Final reboot of the system, domain controller is complete and ready for use! 
 
 # Workstation #1 Instructions: 
- Punisher Workstation only (Windows 10 Enterprise Client Workstation)
+ Punisher Workstation only (Windows 10 Pro or Enterprise Client Workstation)
 
   - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
 
@@ -100,7 +100,7 @@ Each run will require the following :
     - Instructions on how to wget the script directly to the are is located above
 
   - Select Menu Option **P** 
-    - Script must be run ***2 times*** to fully complete Workstation installation and configuation
+    - Script must be run ***2 times*** to fully complete Workstation installation and configuration
       
   - ***Run 1*** - Sets the name of the computer to Punisher, reboots 
     - After the reboot, Run script again, Select Menu Option P for Run #2 
@@ -120,7 +120,7 @@ Each run will require the following :
 
     
 # Workstation #2 Instructions:
- Spiderman Workstation only (Windows 10 Enterprise Client Workstation)
+ Spiderman Workstation only (Windows 10 Pro or Enterprise Client Workstation)
 
   - HYDRA-DC Domain Controller must already be completed and running to setup this workstation
 
@@ -159,7 +159,7 @@ Each run will require the following :
   - local administrator account enabled on the punisher machine and password set to Password1
 
 # Revision 2.0.1 
-  - added regsitry key to enable rdp in the gpo policy
+  - added registry key to enable rdp in the gpo policy
 
 # Revision 2.0.0
   - changes to setting the network ip, gateway, subnet, dns no longer using a powershell array
