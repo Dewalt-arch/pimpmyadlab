@@ -64,10 +64,9 @@ Each run will require the following :
   - **H**  to only Download and extract sharphound.zip and extract sharphound.exe
   - **X**  to exit the menu 
 
-# Updated June 10, 2023
- - added function get_sharphound to dc and workstation setup
- - added standalone Menu option H 
-
+# Updated March 20, 2024
+ - added error handling in fix_workstationdns function
+ 
 # Domain Controller Instructions: 
  HYDRA-DC Domain Controller 
  (Windows 2019 or 2022 Server, Standard Eval Desktop Experience)
@@ -151,6 +150,9 @@ Each run will require the following :
 
 
 # Revision history 
+
+# Revision 2.0.4
+  - added error handling in fix_workstationdns function 
 
 # Revision 2.0.3 
   - local administrator on both spiderman and punisher activated and password set to Password1 

@@ -5,7 +5,7 @@
 # https://academy.tcm-sec.com/p/practical-ethical-hacking-the-complete-course
 #
 # Scripted By: Dewalt         
-# Revision 2.0.3 - see readme.md for revision notes   
+# Revision 2.0.4 - see readme.md for revision notes   
 #    
 # Special Thanks to :
 #  ToddAtLarge (PNPT Certified) for the NukeDefender script 
@@ -678,6 +678,15 @@ function fix_dcdns {
 }
 
 function fix_workstationdns {
+  try {
+  Test-Connection -ComputerName HYDRA-DC -Count 1 -ErrorAction Stop | Out-Null
+  }
+  catch [System.Net.NetworkInformation.PingException] {
+    write-host("`n  [++] HYDRA-DC IP not found")
+    Write-Host ("`n  $_ ")
+    Exit 1
+  }
+  
   $DCDNS=(Test-Connection -comp HYDRA-DC -Count 1).ipv4address.ipaddressToString
   
   write-host("`n  [++] Found HYDRA-DC At $DCDNS")
@@ -826,8 +835,8 @@ function workstations_common {
   Expand-Archive -Force C:\TCM-Academy\PSTools.zip C:\PSTools | Out-Null 
   
   # create c:\share and smbshare
-  mkdir C:\Share > $null 
-  New-SmbShare -Name "Share" -Path "C:\Share" -ChangeAccess "Users" -FullAccess "Everyone" -WarningAction SilentlyContinue | Out-Null
+  New-Item -name "Share" -ItemType Directory -Path "C:\" | Out-Null 
+  New-SmbShare -Name "Share" -Path "C:\Share" -ChangeAccess "Users" -FullAccess "Everyone" -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
 
   fix_workstationdns
 
